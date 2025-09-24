@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Ijssalon — Online</title>
+<style>
+:root {--bg:#1f1f1f;--fg:#f0f0f0;--card:#2b2b2b;--border:#444;--accent:#3fa9f5;--accent-hover:#2d89d8;}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);}
+header{display:flex;justify-content:space-between;align-items:center;padding:1em 2em;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.brand{display:flex;align-items:center;gap:0.8em;}
+.brand-logo{background:black;color:white;border-radius:0.4em;padding:0.3em 0.6em;font-weight:bold;}
+.search{flex:1;margin:0 2em;display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:0.5em;padding:0.4em 0.8em;}
+.search input{background:transparent;border:none;outline:none;color:var(--fg);flex:1;margin-left:0.5em;}
+.cart-btn{position:relative;}
+.cart-count{position:absolute;top:-8px;right:-8px;background:var(--accent);color:#fff;border-radius:50%;font-size:0.75em;padding:0.2em 0.5em;}
+.hero{display:flex;justify-content:space-between;align-items:center;padding:2em;}
+.hero-text h1{font-size:2.5em;margin:0 0 0.5em;}
+.hero-buttons{display:flex;gap:1em;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5em;padding:2em;}
+.card{background:var(--card);border-radius:1em;padding:1.2em;text-align:center;transition:transform 0.2s ease;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:120px;height:120px;border-radius:50%;margin-bottom:1em;}
+.qty{display:flex;justify-content:center;align-items:center;margin:1em 0;gap:0.5em;}
+.qty input{width:60px;text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:0.4em;color:var(--fg);padding:0.3em;}
+.qty button{background:var(--accent);border:none;color:#fff;border-radius:0.4em;padding:0.3em 0.6em;cursor:pointer;font-weight:bold;transition:all 0.2s ease;}
+.qty button:hover{background:var(--accent-hover);transform:scale(1.1);}
+.btn,.add{background:var(--accent);color:#fff;border:none;padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
+.btn:hover,.add:hover{background:var(--accent-hover);transform:scale(1.05);box-shadow:0 0 12px rgba(63,169,245,0.4);}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
+.btn-ghost:hover{background:rgba(63,169,245,0.1);border-color:var(--accent-hover);color:var(--accent-hover);transform:scale(1.05);}
+.cart{position:fixed;top:0;right:0;width:320px;height:100%;background:var(--card);border-left:1px solid var(--border);transform:translateX(100%);transition:transform 0.3s ease;z-index:20;display:flex;flex-direction:column;}
+.cart.open{transform:translateX(0);}
+.cart-header{display:flex;justify-content:space-between;align-items:center;padding:1em;border-bottom:1px solid var(--border);}
+.close-cart{background:var(--accent);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;transition:all 0.2s ease;}
+.close-cart:hover{background:var(--accent-hover);transform:rotate(90deg) scale(1.1);}
+.cart-items{flex:1;overflow-y:auto;padding:1em;}
+.line{display:flex;align-items:center;justify-content:space-between;margin-bottom:1em;}
+.line img{width:40px;height:40px;border-radius:50%;margin-right:0.5em;}
+#checkoutModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:50;justify-content:center;align-items:center;}
+#checkoutModal.show{display:flex;animation:fadeIn 0.3s ease;}
+#checkoutModal .modal-content{background:var(--card);padding:2.5em;border-radius:1.2em;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.5);color:var(--fg);transform:translateY(-30px);opacity:0;animation:slideDown 0.3s forwards;}
+#checkoutModal label{display:block;margin:1.2em 0 0.4em;font-weight:500;}
+#checkoutModal input{width:100%;padding:0.6em;border-radius:0.6em;border:1px solid var(--border);background:var(--bg);color:var(--fg);font-size:1em;}
+#checkoutModal .modal-buttons{display:flex;justify-content:flex-end;gap:1em;margin-top:1.5em;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideDown{from{transform:translateY(-30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><div class="brand-logo">IJ</div><div><div>Ijssalon — Online</div><small>Vers, ambachtelijk & per liter</small></div></div>
+<div class="search"><svg width="16" height="16" fill="currentColor"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="2" fill="none"/><line x1="11" y1="11" x2="15" y2="15" stroke="currentColor" stroke-width="2"/></svg>
+<input id="searchInput" placeholder="Zoek smaak... (bv. vanille)"></div>
+<button class="btn cart-btn" onclick="openCart()">Winkelwagen<span class="cart-count">0</span></button>
+</header>
+
+<section class="hero">
+<div class="hero-text"><h1>Beste ijs, per liter</h1><p>Bestel eenvoudig je favoriete smaken online.</p>
+<div class="hero-buttons"><button class="btn" onclick="openCart()">Bekijk winkelwagen</button><button class="btn-ghost" onclick="sortByPrice()">Sorteer op prijs</button></div></div>
+</section>
+
+<main class="grid" id="productGrid"></main>
+
+<aside class="cart" id="cartDrawer">
+<div class="cart-header"><h2>Winkelwagen</h2><button class="close-cart" onclick="closeCart()">×</button></div>
+<div class="cart-items" id="cartItems"></div>
+<div class="cart-footer"><p>Totaal: €<span id="cartTotal">0.00</span></p>
+<div class="hero-buttons"><button class="btn" onclick="openCheckout()">Naar afrekenen</button><button class="btn-ghost" onclick="clearCart()">Leeg winkelwagen</button></div></div>
+</aside>
+
+<div id="checkoutModal">
+<div class="modal-content">
+<h2>Gegevens invullen</h2>
+<label>Naam:<br><input id="modalCustomerName" placeholder="Volledige naam"></label>
+<label>E-mail:<br><input id="modalCustomerEmail" type="email" placeholder="jouw@email.com"></label>
+<label>Leverdatum:<br><input id="modalDeliveryTime" type="date"></label>
+<div class="modal-buttons"><button class="btn-ghost" onclick="closeCheckout()">Annuleren</button><button class="btn" onclick="finishCheckout()">Bestelling afronden</button></div>
+</div>
+</div>
+
+<script>
+const products=[
+  {name:"Vanille",price:7.50,img:"https://i.imgur.com/cJTOOc5.png",desc:"Ambachtelijk, roomrijk"},
+  {name:"Speculoos",price:5.50,img:"https://i.imgur.com/GIkJNso.png",desc:"Krokant en kruidig"},
+  {name:"Kers",price:6.00,img:"https://i.imgur.com/pu7VLaH.png",desc:"Zoet en sappig"},
+  {name:"Framboos",price:7.00,img:"https://i.imgur.com/ZKfIJ0c.png",desc:"Fris en fruitig"},
+  {name:"Aardbei",price:6.00,img:"https://i.imgur.com/tim0a3Z.png",desc:"Lichtzoet en romig"},
+  {name:"Oreo",price:6.50,img:"https://i.imgur.com/jsGkect.png",desc:"Met echte Oreo stukjes"}
+];
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function renderProducts(){
+  const grid=document.getElementById("productGrid");
+  grid.innerHTML="";
+  products.forEach((p,idx)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`<img src="${p.img}" alt="${p.name}">
+    <h3>${p.name}</h3>
+    <p>€${p.price.toFixed(2)}/L</p>
+    <small>${p.desc}</small>
+    <div class="qty">
+      <button onclick="changeQty(${idx},-1)">-</button>
+      <input type="number" id="qty-${idx}" value="1" min="1" step="1">
+      <button onclick="changeQty(${idx},1)">+</button>
+    </div>
+    <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
+    grid.appendChild(card);
+  });
+}
+
+function changeQty(idx,delta){
+  const input=document.getElementById("qty-"+idx);
+  let val=parseInt(input.value)+delta;
+  if(val<1)val=1;
+  input.value=val;
+}
+
+function addToCart(idx){
+  const qty=parseInt(document.getElementById("qty-"+idx).value);
+  const product=products[idx];
+  const existing=cart.find(i=>i.name===product.name);
+  if(existing)existing.qty+=qty;
+  else cart.push({...product,qty});
+  saveCart();renderCart();
+}
+
+function renderCart(){
+  const items=document.getElementById("cartItems");
+  const total=document.getElementById("cartTotal");
+  const count=document.querySelector(".cart-count");
+  items.innerHTML="";
+  let sum=0,liters=0;
+  cart.forEach((item,i)=>{
+    sum+=item.price*item.qty;
+    liters+=item.qty;
+    const line=document.createElement("div");
+    line.className="line";
+    line.innerHTML=`<img src="${item.img}">
+    <div>${item.name}<br>${item.qty} L · €${(item.price*item.qty).toFixed(2)}</div>
+    <button class="btn-ghost" onclick="removeItem(${i})">Verwijder</button>`;
+    items.appendChild(line);
+  });
+  total.textContent=sum.toFixed(2);
+  count.textContent=liters;
+}
+
+function removeItem(i){cart.splice(i,1);saveCart();renderCart();}
+function clearCart(){if(confirm("Weet je zeker dat je de winkelwagen wilt legen?")){cart=[];saveCart();renderCart();}}
+function saveCart(){localStorage.setItem("cart",JSON.stringify(cart));}
+function openCart(){document.getElementById("cartDrawer").classList.add("open");}
+function closeCart(){document.getElementById("cartDrawer").classList.remove("open");}
+function sortByPrice(){products.sort((a,b)=>a.price-b.price);renderProducts();}
+
+document.getElementById("searchInput").addEventListener("input",e=>{
+  const term=e.target.value.toLowerCase();
+  const grid=document.getElementById("productGrid");
+  grid.innerHTML="";
+  products.filter(p=>p.name.toLowerCase().includes(term)||p.desc.toLowerCase().includes(term))
+    .forEach((p,idx)=>{
+      const card=document.createElement("div");
+      card.className="card";
+      card.innerHTML=`<img src="${p.img}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>€${p.price.toFixed(2)}/L</p>
+      <small>${p.desc}</small>
+      <div class="qty">
+        <button onclick="changeQty(${idx},-1)">-</button>
+        <input type="number" id="qty-${idx}" value="1" min="1" step="1">
+        <button onclick="changeQty(${idx},1)">+</button>
+      </div>
+      <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
+      grid.appendChild(card);
+    });
+});
+
+function openCheckout(){
+  if(cart.length===0){alert("Je winkelwagen is leeg!");return;}
+  document.getElementById("checkoutModal").classList.add("show");
+}
+function closeCheckout(){document.getElementById("checkoutModal").classList.remove("show");}
+
+function finishCheckout(){
+  const name=document.getElementById("modalCustomerName").value.trim();
+  const email=document.getElementById("modalCustomerEmail").value.trim();
+  const deliveryStr=document.getElementById("modalDeliveryTime").value.trim();
+
+  if(!name||!email||!deliveryStr){
+    alert("Vul je naam, e-mail en het gewenste levermoment in!");
+    return;
+  }
+
+  const [year,month,day]=deliveryStr.split("-").map(Number);
+  const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
+
+  const today=new Date(); today.setHours(0,0,0,0);
+  const minDate=new Date(today); minDate.setDate(today.getDate()+7);
+  const delivery=new Date(year,month-1,day);
+
+  if(delivery.getFullYear()!==year||delivery.getMonth()!==month-1||delivery.getDate()!==day){
+    alert("Deze datum bestaat niet!"); return;
+  }
+  if(delivery<minDate){
+    alert("Kies een datum minimaal 7 dagen vanaf vandaag!"); return;
+  }
+
+  const orderData={
+    Tijd: new Date().toLocaleString("nl-BE"),
+    Naam: name,
+    Email: email,
+    Levermoment: leverDatumFormatted,
+    Producten: cart.map(i=>`${i.name} x ${i.qty}`).join(", "),
+    Totaal: document.getElementById("cartTotal").textContent
+  };
+
+  fetch("https://sheetdb.io/api/v1/0uiactqsr99zi",{
+    method:"POST",
+    body:JSON.stringify({data:[orderData]}),
+    headers:{"Content-Type":"application/json"}
+  })
+  .then(r=>r.json())
+  .then(d=>console.log("Bestelling opgeslagen:",d))
+  .catch(err=>console.error("Fout bij versturen bestelling:",err));
+
+  // Opslaan voor dashboard
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(orderData);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  closeCheckout();
+  alert(`Bedankt voor je bestelling, ${name}!\nCheck je e-mail (${email}) voor updates over je bestelling.`);
+  cart=[]; saveCart(); renderCart();
+  document.getElementById("modalCustomerName").value="";
+  document.getElementById("modalCustomerEmail").value="";
+  document.getElementById("modalDeliveryTime").value="";
+}
+
+renderProducts();renderCart();
+</script>
+</body>
+</html>
