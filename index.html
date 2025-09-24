@@ -13,9 +13,6 @@ header{display:flex;justify-content:space-between;align-items:center;padding:1em
 .search input{background:transparent;border:none;outline:none;color:var(--fg);flex:1;margin-left:0.5em;}
 .cart-btn{position:relative;}
 .cart-count{position:absolute;top:-8px;right:-8px;background:var(--accent);color:#fff;border-radius:50%;font-size:0.75em;padding:0.2em 0.5em;}
-.hero{display:flex;justify-content:space-between;align-items:center;padding:2em;}
-.hero-text h1{font-size:2.5em;margin:0 0 0.5em;}
-.hero-buttons{display:flex;gap:1em;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5em;padding:2em;}
 .card{background:var(--card);border-radius:1em;padding:1.2em;text-align:center;transition:transform 0.2s ease;}
 .card:hover{transform:translateY(-5px);}
@@ -54,11 +51,6 @@ header{display:flex;justify-content:space-between;align-items:center;padding:1em
 <button class="btn cart-btn" onclick="openCart()">Winkelwagen<span class="cart-count">0</span></button>
 </header>
 
-<section class="hero">
-<div class="hero-text"><h1>Beste ijs, per liter</h1><p>Bestel eenvoudig je favoriete smaken online.</p>
-<div class="hero-buttons"><button class="btn" onclick="openCart()">Bekijk winkelwagen</button></div></div>
-</section>
-
 <main class="grid" id="productGrid"></main>
 
 <aside class="cart" id="cartDrawer">
@@ -84,58 +76,59 @@ header{display:flex;justify-content:space-between;align-items:center;padding:1em
 </div>
 
 <script>
+const apiUrl = "https://sheetdb.io/api/v1/i1hu5kkuad2pt";
 const products=[
-  {name:"Vanille",price:7.5,img:"https://i.imgur.com/cJTOOc5.png"},
-  {name:"Speculoos",price:5.5,img:"https://i.imgur.com/GIkJNso.png"},
-  {name:"Kers",price:6.5,img:"https://i.imgur.com/pu7VLaH.png"},
-  {name:"Framboos",price:7.0,img:"https://i.imgur.com/ZKfIJ0c.png"},
-  {name:"Aardbei",price:6.0,img:"https://i.imgur.com/tim0a3Z.png"},
-  {name:"Oreo",price:6.5,img:"https://i.imgur.com/jsGkect.png"}
+  {name:"Vanille",price:7.5,img:"https://i.imgur.com/cJTOOc5.png"},
+  {name:"Speculoos",price:5.5,img:"https://i.imgur.com/GIkJNso.png"},
+  {name:"Kers",price:6.5,img:"https://i.imgur.com/pu7VLaH.png"},
+  {name:"Framboos",price:7.0,img:"https://i.imgur.com/ZKfIJ0c.png"},
+  {name:"Aardbei",price:6.0,img:"https://i.imgur.com/tim0a3Z.png"},
+  {name:"Oreo",price:6.5,img:"https://i.imgur.com/jsGkect.png"}
 ];
 let cart = JSON.parse(localStorage.getItem("cart"))||[];
 
 function renderProducts(){
-  const grid=document.getElementById("productGrid");
-  grid.innerHTML="";
-  products.forEach((p,idx)=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`<img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><p>€${p.price.toFixed(2)}/L</p>
-    <div class="qty"><button onclick="changeQty(${idx},-1)">-</button><input type="number" id="qty-${idx}" value="1" min="1"><button onclick="changeQty(${idx},1)">+</button></div>
-    <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
-    grid.appendChild(card);
-  });
+  const grid=document.getElementById("productGrid");
+  grid.innerHTML="";
+  products.forEach((p,idx)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`<img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><p>€${p.price.toFixed(2)}/L</p>
+    <div class="qty"><button onclick="changeQty(${idx},-1)">-</button><input type="number" id="qty-${idx}" value="1" min="1"><button onclick="changeQty(${idx},1)">+</button></div>
+    <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
+    grid.appendChild(card);
+  });
 }
 
 function changeQty(idx,delta){
-  const input=document.getElementById("qty-"+idx);
-  let val=parseInt(input.value)+delta;
-  if(val<1) val=1;
-  input.value=val;
+  const input=document.getElementById("qty-"+idx);
+  let val=parseInt(input.value)+delta;
+  if(val<1) val=1;
+  input.value=val;
 }
 
 function addToCart(idx){
-  const qty=parseInt(document.getElementById("qty-"+idx).value);
-  const product=products[idx];
-  const existing=cart.find(i=>i.name===product.name);
-  if(existing) existing.qty+=qty; else cart.push({...product,qty});
-  saveCart(); renderCart();
+  const qty=parseInt(document.getElementById("qty-"+idx).value);
+  const product=products[idx];
+  const existing=cart.find(i=>i.name===product.name);
+  if(existing) existing.qty+=qty; else cart.push({...product,qty});
+  saveCart(); renderCart();
 }
 
 function renderCart(){
-  const items=document.getElementById("cartItems");
-  const total=document.getElementById("cartTotal");
-  const count=document.querySelector(".cart-count");
-  items.innerHTML=""; let sum=0,liters=0;
-  cart.forEach((item,i)=>{
-    sum+=item.price*item.qty; liters+=item.qty;
-    const line=document.createElement("div");
-    line.className="line";
-    line.innerHTML=`<img src="${item.img}"><div>${item.name}<br>${item.qty} L · €${(item.price*item.qty).toFixed(2)}</div><button class="btn-ghost" onclick="removeItem(${i})">Verwijder</button>`;
-    items.appendChild(line);
-  });
-  total.textContent=sum.toFixed(2);
-  count.textContent=liters;
+  const items=document.getElementById("cartItems");
+  const total=document.getElementById("cartTotal");
+  const count=document.querySelector(".cart-count");
+  items.innerHTML=""; let sum=0,liters=0;
+  cart.forEach((item,i)=>{
+    sum+=item.price*item.qty; liters+=item.qty;
+    const line=document.createElement("div");
+    line.className="line";
+    line.innerHTML=`<img src="${item.img}"><div>${item.name}<br>${item.qty} L · €${(item.price*item.qty).toFixed(2)}</div><button class="btn-ghost" onclick="removeItem(${i})">Verwijder</button>`;
+    items.appendChild(line);
+  });
+  total.textContent=sum.toFixed(2);
+  count.textContent=liters;
 }
 
 function removeItem(i){cart.splice(i,1); saveCart(); renderCart();}
@@ -145,40 +138,41 @@ function openCart(){document.getElementById("cartDrawer").classList.add("open");
 function closeCart(){document.getElementById("cartDrawer").classList.remove("open");}
 
 function openCheckout(){
-  if(cart.length===0){alert("Je winkelwagen is leeg!");return;}
-  document.getElementById("checkoutModal").classList.add("show");
+  if(cart.length===0){alert("Je winkelwagen is leeg!");return;}
+  document.getElementById("checkoutModal").classList.add("show");
 }
 function closeCheckout(){document.getElementById("checkoutModal").classList.remove("show");}
 
 function finishCheckout(){
-  const name=document.getElementById("modalCustomerName").value.trim();
-  const email=document.getElementById("modalCustomerEmail").value.trim();
-  const deliveryStr=document.getElementById("modalDeliveryTime").value.trim();
-  if(!name||!email||!deliveryStr){alert("Vul alles in!"); return;}
-  const [year,month,day]=deliveryStr.split("-").map(Number);
-  const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
+  const name=document.getElementById("modalCustomerName").value.trim();
+  const email=document.getElementById("modalCustomerEmail").value.trim();
+  const deliveryStr=document.getElementById("modalDeliveryTime").value.trim();
+  if(!name||!email||!deliveryStr){alert("Vul alles in!"); return;}
+  const [year,month,day]=deliveryStr.split("-").map(Number);
+  const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
 
-  const orderData={
-    Tijd: new Date().toLocaleString("nl-BE"),
-    Naam: name,
-    Email: email,
-    Levermoment: leverDatumFormatted,
-    Producten: cart.map(i=>`${i.name} x ${i.qty}`).join(", "),
-    Totaal: document.getElementById("cartTotal").textContent
-  };
+  const orderData={
+    Tijd: new Date().toLocaleString("nl-BE"),
+    Naam: name,
+    Email: email,
+    Levermoment: leverDatumFormatted,
+    Producten: cart.map(i=>`${i.name} x ${i.qty}`).join(", "),
+    Totaal: document.getElementById("cartTotal").textContent,
+    Afgerond: false
+  };
 
-  // Verzenden naar SheetDB
-  fetch("https://sheetdb.io/api/v1/i1hu5kkuad2pt",{
-    method:"POST",
-    body:JSON.stringify({data:[orderData]}),
-    headers:{"Content-Type":"application/json"}
-  }).then(r=>r.json()).then(d=>console.log("Bestelling opgeslagen:",d)).catch(err=>console.error(err));
+  fetch(apiUrl,{
+    method:"POST",
+    body:JSON.stringify({data:[orderData]}),
+    headers:{"Content-Type":"application/json"}
+  }).then(r=>r.json()).then(d=>{
+    alert(`Bedankt voor je bestelling, ${name}!`);
+  }).catch(err=>console.error(err));
 
-  closeCheckout(); alert(`Bedankt voor je bestelling, ${name}!`);
-  cart=[]; saveCart(); renderCart();
-  document.getElementById("modalCustomerName").value="";
-  document.getElementById("modalCustomerEmail").value="";
-  document.getElementById("modalDeliveryTime").value="";
+  closeCheckout(); cart=[]; saveCart(); renderCart();
+  document.getElementById("modalCustomerName").value="";
+  document.getElementById("modalCustomerEmail").value="";
+  document.getElementById("modalDeliveryTime").value="";
 }
 
 renderProducts(); renderCart();
