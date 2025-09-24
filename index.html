@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IJssalon - Bestelling Plaatsen</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>IJssalon — Online</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -13,9 +12,15 @@
             --card-background: #2a2a2a;
             --text-color: #f0f0f0;
             --accent-blue: #007bff;
-            --form-border: #444;
-            --input-background: #333;
-            --button-hover: #0056b3;
+            --hover-blue: #0056b3;
+            --border-color: #444;
+            --header-height: 70px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -23,227 +28,898 @@
             background-color: var(--dark-background);
             color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: var(--header-height);
+            background-color: #242424;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .logo .icon {
+            background-color: var(--text-color);
+            color: var(--dark-background);
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-right: 10px;
         }
 
-        .container {
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar input {
             width: 100%;
-            max-width: 800px;
-            background-color: var(--card-background);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--accent-blue);
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        input[type="text"], input[type="email"], input[type="date"], input[type="number"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--form-border);
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            background-color: var(--input-background);
+            background-color: #333;
             color: var(--text-color);
             font-size: 1rem;
+            outline: none;
             transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus {
-            outline: none;
+        .search-bar input::placeholder {
+            color: #888;
+        }
+
+        .search-bar input:focus {
             border-color: var(--accent-blue);
         }
 
-        .flavor-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #333;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .flavor-item span {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .flavor-item input[type="number"] {
-            width: 80px;
-            text-align: center;
-        }
-        
-        #total-price-display {
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: right;
-            margin-top: 20px;
-            color: var(--success-green);
-        }
-
-        button[type="submit"] {
-            display: block;
-            width: 100%;
-            padding: 15px;
+        .cart-button {
             background-color: var(--accent-blue);
             color: white;
             border: none;
+            padding: 10px 20px;
             border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
             cursor: pointer;
-            margin-top: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            position: relative;
             transition: background-color 0.3s ease;
         }
 
-        button[type="submit"]:hover {
-            background-color: var(--button-hover);
+        .cart-button:hover {
+            background-color: var(--hover-blue);
         }
 
-        .hidden {
+        .cart-button .item-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            line-height: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .view-cart-button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-cart-button:hover {
+            background-color: var(--hover-blue);
+        }
+
+        /* Product Grid */
+        .product-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--card-background);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .product-card.hidden {
             display: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px auto 15px;
+            border: 4px solid var(--accent-blue);
+            transition: border-color 0.3s ease;
+        }
+
+        .product-card:hover img {
+            border-color: var(--hover-blue);
+        }
+
+        .product-info h3 {
+            font-size: 1.4rem;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            font-size: 1.1rem;
+            color: #bbb;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .quantity-selector button:hover {
+            background-color: var(--hover-blue);
+        }
+
+        .quantity-selector input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            background-color: #333;
+            color: var(--text-color);
+            padding: 8px 5px;
+            margin: 0 5px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            -moz-appearance: textfield;
+        }
+
+        .quantity-selector input::-webkit-outer-spin-button,
+        .quantity-selector input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--hover-blue);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background-color: #242424;
+            box-shadow: -8px 0 15px rgba(0, 0, 0, 0.4);
+            transition: right 0.4s ease-in-out;
+            padding: 20px;
+            z-index: 101;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-blue);
+            margin-bottom: 20px;
+        }
+
+        .cart-header h2 {
+            font-size: 2rem;
+            color: var(--text-color);
+        }
+
+        .close-cart-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-cart-btn:hover {
+            color: #ff6347;
+        }
+
+        #cart-items-list {
+            list-style: none;
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        #cart-items-list li {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: #ff6347;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .remove-item-btn:hover {
+            opacity: 0.8;
+        }
+
+        .cart-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .checkout-btn, .empty-cart-btn {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--hover-blue);
+        }
+
+        .empty-cart-btn {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+
+        .empty-cart-btn:hover {
+            background-color: #444;
+        }
+        
+        /* Checkout Overlay */
+        .checkout-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 200;
+        }
+
+        .checkout-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .checkout-modal {
+            background-color: #242424;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .checkout-modal h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--accent-blue);
+        }
+
+        .checkout-modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .checkout-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .checkout-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .checkout-form input[type="text"],
+        .checkout-form input[type="email"],
+        .checkout-form input[type="date"],
+        .checkout-form button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #333;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        
+        .checkout-form input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        .checkout-form button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-form button:hover {
+            background-color: var(--hover-blue);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .top-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px;
+            }
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin: 10px 0 0;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+            .hero-section p {
+                font-size: 1rem;
+            }
+            .cart-button {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            .cart-sidebar.open {
+                right: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>IJssalon</h1>
-        <form id="order-form">
-            <div class="form-group">
-                <label for="name">Naam:</label>
-                <input type="text" id="name" name="Naam" required>
-            </div>
-            <div class="form-group">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="Email" required>
-            </div>
-            <div class="form-group">
-                <label for="pickup-date">Ophaaldatum:</label>
-                <input type="date" id="pickup-date" name="Ophaaldatum" required>
-            </div>
-            
-            <div class="flavors-section">
-                <h2>Smaken</h2>
-                <div class="flavor-item" data-price="10.00">
-                    <span>Vanille</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Vanille">
-                </div>
-                <div class="flavor-item" data-price="12.00">
-                    <span>Chocolade</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Chocolade">
-                </div>
-                <div class="flavor-item" data-price="11.50">
-                    <span>Aardbei</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Aardbei">
-                </div>
-                <div class="flavor-item" data-price="13.00">
-                    <span>Oreo</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Oreo">
-                </div>
-            </div>
+    <header class="top-header">
+        <a href="#" class="logo">
+            <div class="icon">IJ</div>
+            IJssalon — Online <span style="font-size: 0.9rem; margin-left: 5px; opacity: 0.8;">Vers, ambachtelijk & per liter</span>
+        </a>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Zoek smaak... (bv. vanille)">
+        </div>
+        <button class="cart-button" id="toggleCartButton">
+            Winkelwagen <span class="item-count" id="cartItemCount">0</span>
+        </button>
+    </header>
 
-            <div id="total-price-display">Totaal: €0,00</div>
+    <main>
+        <section class="hero-section">
+            <h1>Beste ijs, per liter</h1>
+            <p>Bestel eenvoudig je favoriete smaken online.</p>
+            <button class="view-cart-button" id="heroViewCartButton">Bekijk winkelwagen</button>
+        </section>
 
-            <button type="submit">
-                <i class="fas fa-paper-plane"></i> Bestelling plaatsen
-            </button>
-        </form>
+        <section class="product-container">
+            <div class="product-grid" id="productGrid">
+                <div class="product-card" data-name="Vanille" data-price="7.50" data-img="https://i.imgur.com/cJTOOc5.png">
+                    <img src="https://i.imgur.com/cJTOOc5.png" alt="Vanille ijs">
+                    <div class="product-info">
+                        <h3>Vanille</h3>
+                        <p>€7.50/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Speculoos" data-price="5.50" data-img="https://i.imgur.com/GIkJNso.png">
+                    <img src="https://i.imgur.com/GIkJNso.png" alt="Speculoos ijs">
+                    <div class="product-info">
+                        <h3>Speculoos</h3>
+                        <p>€5.50/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Kers" data-price="6.50" data-img="https://i.imgur.com/pu7VLaH.png">
+                    <img src="https://i.imgur.com/pu7VLaH.png" alt="Kers ijs">
+                    <div class="product-info">
+                        <h3>Kers</h3>
+                        <p>€6.50/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Framboos" data-price="7.00" data-img="https://i.imgur.com/ZKfIJ0c.png">
+                    <img src="https://i.imgur.com/ZKfIJ0c.png" alt="Framboos ijs">
+                    <div class="product-info">
+                        <h3>Framboos</h3>
+                        <p>€7.00/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Aardbei" data-price="6.00" data-img="https://i.imgur.com/tim0a3Z.png">
+                    <img src="https://i.imgur.com/tim0a3Z.png" alt="Aardbei ijs">
+                    <div class="product-info">
+                        <h3>Aardbei</h3>
+                        <p>€6.00/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="Oreo" data-price="6.50" data-img="https://i.imgur.com/jsGkect.png">
+                    <img src="https://i.imgur.com/jsGkect.png" alt="Oreo ijs">
+                    <div class="product-info">
+                        <h3>Oreo</h3>
+                        <p>€6.50/L</p>
+                        <div class="quantity-selector">
+                            <button class="quantity-minus">-</button>
+                            <input type="number" value="1" min="1" class="quantity-input">
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">Voeg toe</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Winkelwagen</h2>
+            <button class="close-cart-btn" id="closeCartButton">&times;</button>
+        </div>
+        <ul id="cart-items-list">
+            <li class="empty-cart-message">Je winkelwagen is leeg.</li>
+        </ul>
+        <div class="cart-total">
+            Totaal: <span id="cart-total-price">€0,00</span>
+        </div>
+        <div class="cart-actions">
+            <button class="checkout-btn" id="checkoutBtn">Naar afrekenen</button>
+            <button class="empty-cart-btn">Leeg winkelwagen</button>
+        </div>
+    </div>
+
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-modal">
+            <button class="close-btn" id="closeCheckoutBtn">&times;</button>
+            <h2>Bestelling afronden</h2>
+            <form id="checkoutForm" class="checkout-form">
+                <div class="form-group">
+                    <label for="name">Naam</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="pickupDate">Gewenste ophaaldatum</label>
+                    <input type="date" id="pickupDate" required>
+                </div>
+                <button type="submit">Bestelling plaatsen</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        const form = document.getElementById('order-form');
-        const totalPriceDisplay = document.getElementById('total-price-display');
-        const numberInputs = document.querySelectorAll('.flavor-item input[type="number"]');
+        const productCards = document.querySelectorAll('.product-card');
+        const cartItemsList = document.getElementById('cart-items-list');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const cartItemCount = document.getElementById('cartItemCount');
+        const toggleCartButton = document.getElementById('toggleCartButton');
+        const heroViewCartButton = document.getElementById('heroViewCartButton');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const closeCartButton = document.getElementById('closeCartButton');
+        const emptyCartButton = document.querySelector('.empty-cart-btn');
+        const searchInput = document.getElementById('searchInput');
 
-        function updateTotalPrice() {
-            let total = 0;
-            numberInputs.forEach(input => {
-                const quantity = parseInt(input.value) || 0;
-                const price = parseFloat(input.closest('.flavor-item').dataset.price);
-                total += quantity * price;
-            });
-            totalPriceDisplay.textContent = `Totaal: €${total.toFixed(2).replace('.', ',')}`;
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const checkoutOverlay = document.getElementById('checkoutOverlay');
+        const closeCheckoutBtn = document.getElementById('closeCheckoutBtn');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const pickupDateInput = document.getElementById('pickupDate');
+        
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/pnz12bqkys5sc';
+
+        let cart = [];
+        
+        // Functie om een unieke, tijdgebaseerde ID te genereren
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
 
-        numberInputs.forEach(input => {
-            input.addEventListener('change', updateTotalPrice);
-            input.addEventListener('input', updateTotalPrice);
-        });
+        function renderCart() {
+            cartItemsList.innerHTML = '';
+            let total = 0;
+            let totalItems = 0;
 
-        updateTotalPrice();
+            if (cart.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'Je winkelwagen is leeg.';
+                li.classList.add('empty-cart-message');
+                cartItemsList.appendChild(li);
+                checkoutBtn.disabled = true;
+                checkoutBtn.style.opacity = '0.5';
+                checkoutBtn.style.cursor = 'not-allowed';
+            } else {
+                cart.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-details">
+                            <span class="cart-item-name">${item.name}</span>
+                            <span class="cart-item-price">${item.quantity} L - €${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <button class="remove-item-btn" data-name="${item.name}">Verwijder</button>
+                    `;
+                    cartItemsList.appendChild(li);
+                    total += item.price * item.quantity;
+                    totalItems += item.quantity;
+                });
+                checkoutBtn.disabled = false;
+                checkoutBtn.style.opacity = '1';
+                checkoutBtn.style.cursor = 'pointer';
+            }
+            
+            cartTotalPrice.textContent = `€${total.toFixed(2).replace('.', ',')}`;
+            cartItemCount.textContent = totalItems;
+        }
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            renderCart();
+        }
 
-            const orderData = {
-                ID: Date.now().toString(),
-                Naam: document.getElementById('name').value,
-                Email: document.getElementById('email').value,
-                Ophaaldatum: document.getElementById('pickup-date').value,
-                Items: [],
-                Totaalprijs: 0
-            };
+        productCards.forEach(card => {
+            const productName = card.dataset.name;
+            const productPrice = parseFloat(card.dataset.price);
+            const productImg = card.dataset.img;
+            const quantityInput = card.querySelector('.quantity-input');
+            const minusButton = card.querySelector('.quantity-minus');
+            const plusButton = card.querySelector('.quantity-plus');
+            const addToCartButton = card.querySelector('.add-to-cart-btn');
 
-            numberInputs.forEach(input => {
-                const quantity = parseInt(input.value) || 0;
-                if (quantity > 0) {
-                    const price = parseFloat(input.closest('.flavor-item').dataset.price);
-                    orderData.Items.push({
-                        name: input.dataset.flavorName,
-                        quantity: quantity,
-                        price: price
-                    });
-                    orderData.Totaalprijs += quantity * price;
+            minusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
                 }
             });
 
-            if (orderData.Items.length === 0) {
-                alert('Plaats minstens 1 bestelling.');
+            plusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+
+            addToCartButton.addEventListener('click', () => {
+                const quantity = parseInt(quantityInput.value);
+                if (quantity < 1) return;
+
+                const existingItem = cart.find(item => item.name === productName);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({
+                        name: productName,
+                        price: productPrice,
+                        quantity: quantity,
+                        img: productImg
+                    });
+                }
+                renderCart();
+                quantityInput.value = 1;
+            });
+        });
+
+        // Event Listeners voor de knoppen
+        toggleCartButton.addEventListener('click', () => {
+            cartSidebar.classList.toggle('open');
+        });
+
+        heroViewCartButton.addEventListener('click', () => {
+            cartSidebar.classList.add('open');
+        });
+
+        closeCartButton.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+        });
+
+        emptyCartButton.addEventListener('click', () => {
+            cart = [];
+            renderCart();
+        });
+
+        cartItemsList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-item-btn')) {
+                const productName = event.target.dataset.name;
+                removeFromCart(productName);
+            }
+        });
+
+        // Zoekfunctie
+        searchInput.addEventListener('keyup', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            productCards.forEach(card => {
+                const productName = card.dataset.name.toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+
+        // Checkout functionaliteit
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length > 0) {
+                cartSidebar.classList.remove('open');
+                checkoutOverlay.classList.add('active');
+            }
+        });
+
+        closeCheckoutBtn.addEventListener('click', () => {
+            checkoutOverlay.classList.remove('active');
+        });
+
+        checkoutForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const name = nameInput.value;
+            const email = emailInput.value;
+            const pickupDate = pickupDateInput.value;
+            
+            const selectedDate = new Date(pickupDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const minDate = new Date();
+            minDate.setDate(today.getDate() + 7);
+
+            if (selectedDate < minDate) {
+                alert('De ophaaldatum moet minstens 1 week van tevoren zijn. Kies een andere datum.');
                 return;
             }
 
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const orderItems = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
+            
+            // Genereer een unieke ID voor de bestelling
+            const orderID = generateUniqueId();
+
+            // Verzend de bestelling naar SheetDB
             try {
-                const response = await fetch('https://sheetdb.io/api/v1/pnz12bqkys5sc', {
+                const response = await fetch(SHEETDB_API_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: orderData
+                        data: {
+                            ID: orderID, // Voeg de unieke ID toe
+                            Naam: name,
+                            Email: email,
+                            Ophaaldatum: pickupDate,
+                            Items: orderItems,
+                            Totaalprijs: total.toFixed(2)
+                        }
                     })
                 });
 
                 if (response.ok) {
-                    alert('Bestelling succesvol geplaatst!');
-                    form.reset();
-                    updateTotalPrice();
+                    alert('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
+                    // Leeg het winkelmandje en verberg de overlay
+                    cart = [];
+                    renderCart();
+                    checkoutOverlay.classList.remove('active');
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    pickupDateInput.value = '';
                 } else {
-                    alert('Er ging iets fout bij het plaatsen van de bestelling.');
+                    throw new Error('Er is een fout opgetreden bij het verzenden van de bestelling.');
                 }
             } catch (error) {
                 console.error('Fout:', error);
-                alert('Er kon geen verbinding gemaakt worden met de server.');
+                alert('Er is een fout opgetreden. Probeer het later opnieuw.');
             }
         });
+
+        // Initial call to set up the empty cart
+        renderCart();
     </script>
 </body>
 </html>
