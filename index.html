@@ -4,47 +4,46 @@
 <meta charset="UTF-8">
 <title>Ijssalon — Online</title>
 <style>
-:root {
-  --bg:#1f1f1f; --fg:#f0f0f0; --card:#2b2b2b; --border:#444;
-  --accent:#3fa9f5; --accent-hover:#2d89d8;
-}
-body {margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--fg);}
-header{display:flex; justify-content:space-between; align-items:center; padding:1em 2em; background:var(--card); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10;}
-.brand{display:flex; align-items:center; gap:0.8em;}
-.brand-logo{background:black; color:white; border-radius:0.4em; padding:0.3em 0.6em; font-weight:bold;}
-.search{flex:1; margin:0 2em; display:flex; align-items:center; background:var(--bg); border:1px solid var(--border); border-radius:0.5em; padding:0.4em 0.8em;}
-.search input{background:transparent; border:none; outline:none; color:var(--fg); flex:1;}
+:root {--bg:#1f1f1f;--fg:#f0f0f0;--card:#2b2b2b;--border:#444;--accent:#3fa9f5;--accent-hover:#2d89d8;}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);}
+header{display:flex;justify-content:space-between;align-items:center;padding:1em 2em;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.brand{display:flex;align-items:center;gap:0.8em;}
+.brand-logo{background:black;color:white;border-radius:0.4em;padding:0.3em 0.6em;font-weight:bold;}
+.search{flex:1;margin:0 2em;display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:0.5em;padding:0.4em 0.8em;}
+.search input{background:transparent;border:none;outline:none;color:var(--fg);flex:1;margin-left:0.5em;}
 .cart-btn{position:relative;}
-.cart-count{position:absolute; top:-8px; right:-8px; background:var(--accent); color:#fff; border-radius:50%; font-size:0.75em; padding:0.2em 0.5em;}
-.hero{display:flex; justify-content:space-between; align-items:center; padding:2em;}
-.hero-text h1{font-size:2.5em; margin:0 0 0.5em;}
-.hero-buttons{display:flex; gap:1em;}
-.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5em; padding:2em;}
-.card{background:var(--card); border-radius:1em; padding:1.2em; text-align:center; transition:transform 0.2s ease;}
+.cart-count{position:absolute;top:-8px;right:-8px;background:var(--accent);color:#fff;border-radius:50%;font-size:0.75em;padding:0.2em 0.5em;}
+.hero{display:flex;justify-content:space-between;align-items:center;padding:2em;}
+.hero-text h1{font-size:2.5em;margin:0 0 0.5em;}
+.hero-buttons{display:flex;gap:1em;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5em;padding:2em;}
+.card{background:var(--card);border-radius:1em;padding:1.2em;text-align:center;transition:transform 0.2s ease;}
 .card:hover{transform:translateY(-5px);}
-.card img{width:120px; height:120px; border-radius:50%; margin-bottom:1em;}
-.qty{display:flex; justify-content:center; align-items:center; margin:1em 0; gap:0.5em;}
-.qty input{width:60px; text-align:center; background:var(--bg); border:1px solid var(--border); border-radius:0.4em; color:var(--fg); padding:0.3em;}
-.qty button{background:var(--accent); border:none; color:#fff; border-radius:0.4em; padding:0.3em 0.6em; cursor:pointer; font-weight:bold; transition:all 0.2s ease;}
-.qty button:hover{background:var(--accent-hover); transform:scale(1.1);}
-.btn,.add{background:var(--accent); color:#fff; border:none; padding:0.6em 1.2em; border-radius:0.6em; cursor:pointer; transition:all 0.2s ease;}
-.btn:hover,.add:hover{background:var(--accent-hover); transform:scale(1.05); box-shadow:0 0 12px rgba(63,169,245,0.4);}
-.btn-ghost{background:transparent; color:var(--accent); border:1px solid var(--accent); padding:0.6em 1.2em; border-radius:0.6em; cursor:pointer; transition:all 0.2s ease;}
-.btn-ghost:hover{background:rgba(63,169,245,0.1); border-color:var(--accent-hover); color:var(--accent-hover); transform:scale(1.05);}
-.cart{position:fixed; top:0; right:0; width:320px; height:100%; background:var(--card); border-left:1px solid var(--border); transform:translateX(100%); transition:transform 0.3s ease; z-index:20; display:flex; flex-direction:column;}
+.card img{width:120px;height:120px;border-radius:50%;margin-bottom:1em;}
+.qty{display:flex;justify-content:center;align-items:center;margin:1em 0;gap:0.5em;}
+.qty input{width:60px;text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:0.4em;color:var(--fg);padding:0.3em;}
+.qty button{background:var(--accent);border:none;color:#fff;border-radius:0.4em;padding:0.3em 0.6em;cursor:pointer;font-weight:bold;transition:all 0.2s ease;}
+.qty button:hover{background:var(--accent-hover);transform:scale(1.1);}
+.btn,.add{background:var(--accent);color:#fff;border:none;padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
+.btn:hover,.add:hover{background:var(--accent-hover);transform:scale(1.05);box-shadow:0 0 12px rgba(63,169,245,0.4);}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
+.btn-ghost:hover{background:rgba(63,169,245,0.1);border-color:var(--accent-hover);color:var(--accent-hover);transform:scale(1.05);}
+.cart{position:fixed;top:0;right:0;width:320px;height:100%;background:var(--card);border-left:1px solid var(--border);transform:translateX(100%);transition:transform 0.3s ease;z-index:20;display:flex;flex-direction:column;}
 .cart.open{transform:translateX(0);}
-.cart-header{display:flex; justify-content:space-between; align-items:center; padding:1em; border-bottom:1px solid var(--border);}
-.close-cart{background:var(--accent); color:#fff; border:none; border-radius:50%; width:32px; height:32px; font-size:1.2rem; cursor:pointer; transition:all 0.2s ease;}
-.close-cart:hover{background:var(--accent-hover); transform:rotate(90deg) scale(1.1);}
-.cart-items{flex:1; overflow-y:auto; padding:1em;}
-.line{display:flex; align-items:center; justify-content:space-between; margin-bottom:1em;}
-.line img{width:40px; height:40px; border-radius:50%; margin-right:0.5em;}
-#checkoutModal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:50; justify-content:center; align-items:center;}
-#checkoutModal.show{display:flex;}
-#checkoutModal .modal-content{background:var(--card); padding:2.5em; border-radius:1.2em; max-width:420px; width:90%; box-shadow:0 8px 30px rgba(0,0,0,0.5); color:var(--fg);}
-#checkoutModal label{display:block; margin:1.2em 0 0.4em; font-weight:500;}
-#checkoutModal input{width:100%; padding:0.6em; border-radius:0.6em; border:1px solid var(--border); background:var(--bg); color:var(--fg); font-size:1em;}
-#checkoutModal .modal-buttons{display:flex; justify-content:flex-end; gap:1em; margin-top:1.5em;}
+.cart-header{display:flex;justify-content:space-between;align-items:center;padding:1em;border-bottom:1px solid var(--border);}
+.close-cart{background:var(--accent);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;transition:all 0.2s ease;}
+.close-cart:hover{background:var(--accent-hover);transform:rotate(90deg) scale(1.1);}
+.cart-items{flex:1;overflow-y:auto;padding:1em;}
+.line{display:flex;align-items:center;justify-content:space-between;margin-bottom:1em;}
+.line img{width:40px;height:40px;border-radius:50%;margin-right:0.5em;}
+#checkoutModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:50;justify-content:center;align-items:center;}
+#checkoutModal.show{display:flex;animation:fadeIn 0.3s ease;}
+#checkoutModal .modal-content{background:var(--card);padding:2.5em;border-radius:1.2em;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.5);color:var(--fg);transform:translateY(-30px);opacity:0;animation:slideDown 0.3s forwards;}
+#checkoutModal label{display:block;margin:1.2em 0 0.4em;font-weight:500;}
+#checkoutModal input{width:100%;padding:0.6em;border-radius:0.6em;border:1px solid var(--border);background:var(--bg);color:var(--fg);font-size:1em;}
+#checkoutModal .modal-buttons{display:flex;justify-content:flex-end;gap:1em;margin-top:1.5em;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes slideDown{from{transform:translateY(-30px);opacity:0;}to{transform:translateY(0);opacity:1);}
 </style>
 </head>
 <body>
@@ -56,11 +55,8 @@ header{display:flex; justify-content:space-between; align-items:center; padding:
 </header>
 
 <section class="hero">
-<div class="hero-text">
-  <h1>Beste ijs, per liter</h1>
-  <p>Bestel eenvoudig je favoriete smaken online.</p>
-  <div class="hero-buttons"><button class="btn" onclick="openCart()">Bekijk winkelwagen</button></div>
-</div>
+<div class="hero-text"><h1>Beste ijs, per liter</h1><p>Bestel eenvoudig je favoriete smaken online.</p>
+<div class="hero-buttons"><button class="btn" onclick="openCart()">Bekijk winkelwagen</button></div></div>
 </section>
 
 <main class="grid" id="productGrid"></main>
@@ -69,11 +65,11 @@ header{display:flex; justify-content:space-between; align-items:center; padding:
 <div class="cart-header"><h2>Winkelwagen</h2><button class="close-cart" onclick="closeCart()">×</button></div>
 <div class="cart-items" id="cartItems"></div>
 <div class="cart-footer">
-<p>Totaal: €<span id="cartTotal">0.00</span></p>
-<div class="hero-buttons">
-<button class="btn" onclick="openCheckout()">Naar afrekenen</button>
-<button class="btn-ghost" onclick="clearCart()">Leeg winkelwagen</button>
-</div>
+    <p>Totaal: €<span id="cartTotal">0.00</span></p>
+    <div class="hero-buttons">
+        <button class="btn" onclick="openCheckout()">Naar afrekenen</button>
+        <button class="btn-ghost" onclick="clearCart()">Leeg winkelwagen</button>
+    </div>
 </div>
 </aside>
 
@@ -149,16 +145,10 @@ function openCart(){document.getElementById("cartDrawer").classList.add("open");
 function closeCart(){document.getElementById("cartDrawer").classList.remove("open");}
 
 function openCheckout(){
-  if(cart.length===0){ alert("Je winkelwagen is leeg!"); return; }
-  const modal = document.getElementById("checkoutModal");
-  modal.style.display="flex";
-  setTimeout(()=> modal.classList.add("show"), 10);
+  if(cart.length===0){alert("Je winkelwagen is leeg!");return;}
+  document.getElementById("checkoutModal").classList.add("show");
 }
-function closeCheckout(){
-  const modal = document.getElementById("checkoutModal");
-  modal.classList.remove("show");
-  setTimeout(()=> modal.style.display="none",300);
-}
+function closeCheckout(){document.getElementById("checkoutModal").classList.remove("show");}
 
 function finishCheckout(){
   const name=document.getElementById("modalCustomerName").value.trim();
@@ -168,26 +158,35 @@ function finishCheckout(){
   const [year,month,day]=deliveryStr.split("-").map(Number);
   const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
 
-  const orderData={
+  const orderData = {
     Tijd: new Date().toLocaleString("nl-BE"),
     Naam: name,
     Email: email,
     Levermoment: leverDatumFormatted,
     Producten: cart.map(i=>`${i.name} x ${i.qty}`).join(", "),
-    Totaal: document.getElementById("cartTotal").textContent
+    Totaal: document.getElementById("cartTotal").textContent,
+    Afgerond: false
   };
 
-  fetch("https://sheetdb.io/api/v1/i1hu5kkuad2pt",{
-    method:"POST",
-    body:JSON.stringify({data:[orderData]}),
-    headers:{"Content-Type":"application/json"}
-  }).then(r=>r.json()).then(d=>console.log("Bestelling opgeslagen:",d)).catch(err=>console.error(err));
-
-  closeCheckout(); alert(`Bedankt voor je bestelling, ${name}!`);
-  cart=[]; saveCart(); renderCart();
-  document.getElementById("modalCustomerName").value="";
-  document.getElementById("modalCustomerEmail").value="";
-  document.getElementById("modalDeliveryTime").value="";
+  fetch("https://sheetdb.io/api/v1/i1hu5kkuad2pt", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({data:[orderData]})
+  })
+  .then(res=>res.json())
+  .then(d=>{
+    console.log("Bestelling opgeslagen:",d);
+    alert(`Bedankt voor je bestelling, ${name}!`);
+    cart=[]; saveCart(); renderCart();
+    document.getElementById("modalCustomerName").value="";
+    document.getElementById("modalCustomerEmail").value="";
+    document.getElementById("modalDeliveryTime").value="";
+    closeCheckout();
+  })
+  .catch(err=>{
+    console.error(err);
+    alert("Er is een fout opgetreden bij het opslaan van je bestelling.");
+  });
 }
 
 renderProducts(); renderCart();
