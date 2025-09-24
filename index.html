@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ijssalon Mauro - Online</title>
     <style>
+        /* Algemene styling */
         :root {
             --dark-bg: #1f1f1f;
             --card-bg: #2b2b2b;
             --accent-blue: #3fa9f5;
+            --accent-blue-hover: #2d89d8;
             --text-color: #f5f5f5;
             --gold: #FFD700;
         }
@@ -19,13 +21,15 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            line-height: 1.6;
         }
 
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
+            padding: 1rem 2rem;
             background-color: var(--card-bg);
             border-bottom: 2px solid var(--accent-blue);
         }
@@ -36,37 +40,31 @@
         }
 
         .logo {
-            font-size: 3em;
+            font-size: 2.5rem;
             font-weight: bold;
             color: var(--gold);
-            margin-right: 10px;
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
+            margin-right: 0.5rem;
         }
 
         .logo-text h1 {
             margin: 0;
-            font-size: 1.5em;
-            color: var(--text-color);
+            font-size: 1.5rem;
         }
 
         .logo-text p {
             margin: 0;
-            font-size: 0.8em;
-            color: var(--text-color);
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
 
         .search-bar {
             flex-grow: 1;
-            margin: 0 50px;
+            margin: 0 2rem;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 10px;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
             border: none;
             background-color: var(--dark-bg);
@@ -74,131 +72,135 @@
         }
 
         .cart-button {
-            position: relative;
             background-color: var(--accent-blue);
-            color: white;
-            padding: 10px 20px;
+            color: var(--text-color);
             border: none;
+            padding: 0.75rem 1.5rem;
             border-radius: 20px;
             cursor: pointer;
             transition: background-color 0.3s;
+            position: relative;
         }
 
         .cart-button:hover {
-            background-color: #2e8b57; /* A darker green for hover, as per the previous example, but can be adjusted */
+            background-color: var(--accent-blue-hover);
         }
 
-        .cart-badge {
+        .cart-count {
             position: absolute;
             top: -5px;
             right: -5px;
-            background-color: var(--gold);
-            color: var(--dark-bg);
+            background-color: red;
+            color: white;
             border-radius: 50%;
-            padding: 5px 8px;
-            font-size: 0.8em;
-            font-weight: bold;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1;
         }
 
+        /* Hero sectie */
         .hero-section {
             text-align: center;
-            padding: 100px 20px;
+            padding: 5rem 2rem;
             background-color: var(--card-bg);
-            margin: 20px;
+            margin: 1.5rem;
             border-radius: 10px;
         }
 
         .hero-section h2 {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             color: var(--gold);
         }
 
         .hero-section p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .hero-section button {
-            padding: 15px 30px;
+            padding: 1rem 2rem;
             background-color: var(--accent-blue);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1rem;
             transition: background-color 0.3s;
         }
 
         .hero-section button:hover {
-            background-color: #2e8b57;
+            background-color: var(--accent-blue-hover);
         }
 
-        .product-grid {
+        /* Product Grid */
+        #productGrid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            gap: 1.5rem;
+            padding: 1.5rem;
         }
 
-        .product-card {
+        .card {
             background-color: var(--card-bg);
             border-radius: 10px;
-            padding: 20px;
+            padding: 1.5rem;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s;
         }
 
-        .product-card:hover {
+        .card:hover {
             transform: translateY(-5px);
         }
 
-        .product-card img {
+        .card img {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
         }
 
-        .product-card h3 {
-            margin: 10px 0 5px;
+        .card h3 {
+            margin: 0.5rem 0;
+            color: var(--gold);
         }
 
-        .product-card .price {
+        .card p {
+            margin: 0 0 1rem;
             color: var(--accent-blue);
-            font-size: 1.2em;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
 
-        .quantity-selector {
+        .qty {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
         }
 
-        .quantity-selector button {
+        .qty button {
             background-color: var(--dark-bg);
             color: var(--text-color);
-            border: none;
-            padding: 5px 10px;
+            border: 1px solid #444;
+            padding: 0.25rem 0.75rem;
             cursor: pointer;
             border-radius: 5px;
         }
 
-        .quantity-selector input {
+        .qty input {
             width: 40px;
             text-align: center;
             background-color: var(--dark-bg);
             color: var(--text-color);
-            border: none;
-            margin: 0 5px;
+            border: 1px solid #444;
+            margin: 0 0.5rem;
+            border-radius: 5px;
         }
 
-        .add-to-cart {
-            padding: 10px 20px;
+        .card .add {
+            padding: 0.75rem 1.5rem;
             background-color: var(--accent-blue);
             color: white;
             border: none;
@@ -207,138 +209,161 @@
             transition: background-color 0.3s;
         }
 
-        .add-to-cart:hover {
-            background-color: #2e8b57;
+        .card .add:hover {
+            background-color: var(--accent-blue-hover);
         }
 
-        .cart-drawer {
+        /* Winkelwagen Drawer */
+        #cartDrawer {
             position: fixed;
             top: 0;
             right: -400px;
             width: 400px;
+            max-width: 90%;
             height: 100%;
             background-color: var(--card-bg);
-            padding: 20px;
+            padding: 1.5rem;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
-            transition: right 0.5s;
+            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             overflow-y: auto;
         }
 
-        .cart-drawer.open {
+        #cartDrawer.open {
             right: 0;
         }
 
-        .cart-header {
+        .drawer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
-        .cart-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .cart-item img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-
-        .cart-item-info {
-            flex-grow: 1;
-        }
-
-        .cart-item-info h4 {
+        .drawer-header h2 {
             margin: 0;
+            color: var(--gold);
         }
 
-        .cart-item-info p {
-            margin: 5px 0 0;
-            color: var(--accent-blue);
-        }
-
-        .cart-item button {
-            background-color: #dc3545;
-            color: white;
+        .drawer-header .close {
+            font-size: 1.5rem;
+            background: none;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            color: var(--text-color);
             cursor: pointer;
         }
 
+        #cartItems .line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        #cartItems .line img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        #cartItems .line > div {
+            flex-grow: 1;
+        }
+
+        #cartItems .line .btn-ghost {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
         .cart-footer {
-            margin-top: 20px;
-            border-top: 1px solid var(--dark-bg);
-            padding-top: 20px;
+            margin-top: 2rem;
+            border-top: 1px solid #444;
+            padding-top: 1rem;
         }
 
         .cart-footer .total {
-            font-size: 1.5em;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-footer .total span {
+            color: var(--accent-blue);
         }
 
         .cart-footer button {
             width: 100%;
-            padding: 15px;
+            padding: 1rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 10px;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
-
-        #checkout-btn {
+        
+        .cart-footer .checkout {
             background-color: var(--accent-blue);
             color: white;
+            transition: background-color 0.3s;
         }
 
-        #clear-cart-btn {
+        .cart-footer .checkout:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .cart-footer .clear {
             background-color: #6c757d;
             color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .cart-footer .clear:hover {
+            background-color: #5a6268;
         }
 
+        /* Checkout Modal */
         .modal {
-            display: none;
             position: fixed;
-            z-index: 1;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
+            display: none;
             justify-content: center;
             align-items: center;
+            z-index: 2000;
+        }
+
+        .modal.show {
+            display: flex;
         }
 
         .modal-content {
             background-color: var(--card-bg);
-            padding: 30px;
+            padding: 2rem;
             border-radius: 10px;
             width: 500px;
             max-width: 90%;
-            color: var(--text-color);
+            position: relative;
         }
-
+        
         .modal-content h2 {
             margin-top: 0;
             color: var(--gold);
         }
 
-        .modal-content label {
-            display: block;
-            margin-bottom: 5px;
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 0.75rem;
             background-color: var(--dark-bg);
             border: 1px solid #444;
             color: var(--text-color);
@@ -347,31 +372,27 @@
 
         .modal-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .modal-buttons button {
-            padding: 10px 20px;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-
-        #cancel-btn {
+        
+        .modal-buttons .cancel {
             background-color: #dc3545;
             color: white;
         }
 
-        #submit-order-btn {
+        .modal-buttons .confirm {
             background-color: var(--accent-blue);
             color: white;
-        }
-
-        #thank-you-message {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.2em;
-            display: none;
         }
     </style>
 </head>
@@ -386,11 +407,11 @@
             </div>
         </div>
         <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Zoek naar smaken...">
+            <input type="text" id="searchInput" placeholder="Zoek naar smaken...">
         </div>
-        <button class="cart-button" id="open-cart-btn">
+        <button class="cart-button" onclick="openCart()">
             Winkelwagen
-            <span class="cart-badge" id="cart-item-count">0</span>
+            <span class="cart-count">0</span>
         </button>
     </header>
 
@@ -398,47 +419,40 @@
         <div class="hero-section">
             <h2>Beste ijs, per liter</h2>
             <p>Bestel eenvoudig je favoriete smaken online.</p>
-            <button id="view-cart-btn">Bekijk winkelwagen</button>
+            <button onclick="openCart()">Bekijk winkelwagen</button>
         </div>
 
-        <div class="product-grid" id="product-grid">
+        <div id="productGrid">
             </div>
-
-        <div id="thank-you-message">
-            <p>Hartelijk dank voor je bestelling! 🎉 We hebben je aanvraag ontvangen en nemen contact met je op.</p>
-        </div>
     </main>
 
-    <div class="cart-drawer" id="cart-drawer">
-        <div class="cart-header">
-            <h3>Jouw winkelwagen</h3>
-            <button id="close-cart-btn">X</button>
+    <div id="cartDrawer">
+        <div class="drawer-header">
+            <h2>Winkelwagen</h2>
+            <button class="close" onclick="closeCart()">&times;</button>
         </div>
-        <div id="cart-items">
+        <div id="cartItems">
             </div>
         <div class="cart-footer">
-            <div class="total">Totaal: <span id="cart-total">€0.00</span></div>
-            <button id="clear-cart-btn">Leeg winkelwagen</button>
-            <button id="checkout-btn">Naar afrekenen</button>
+            <div class="total">Totaal: <span id="cartTotal">0.00</span></div>
+            <button class="checkout" onclick="openCheckout()">Naar afrekenen</button>
+            <button class="clear" onclick="clearCart()">Leeg winkelwagen</button>
         </div>
     </div>
 
-    <div id="checkout-modal" class="modal">
+    <div id="checkoutModal" class="modal">
         <div class="modal-content">
             <h2>Afrekenen</h2>
-            <form id="checkout-form">
-                <label for="name">Naam:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="delivery-date">Leverdatum:</label>
-                <input type="date" id="delivery-date" name="delivery-date" required>
-
+            <form onsubmit="event.preventDefault(); finishCheckout();">
+                <label for="modalCustomerName">Naam</label>
+                <input type="text" id="modalCustomerName" required>
+                <label for="modalCustomerEmail">E-mail</label>
+                <input type="email" id="modalCustomerEmail" required>
+                <label for="modalDeliveryTime">Leverdatum</label>
+                <input type="date" id="modalDeliveryTime" required>
                 <div class="modal-buttons">
-                    <button type="button" id="cancel-btn">Annuleren</button>
-                    <button type="submit" id="submit-order-btn">Bestelling afronden</button>
+                    <button type="button" class="cancel" onclick="closeCheckout()">Annuleren</button>
+                    <button type="submit" class="confirm">Bestelling afronden</button>
                 </div>
             </form>
         </div>
@@ -446,194 +460,165 @@
 
     <script>
         const products = [
-            { id: 'vanille', name: 'Vanille', price: 7.50, image: 'https://i.imgur.com/cJTOOc5.png' },
-            { id: 'speculoos', name: 'Speculoos', price: 5.50, image: 'https://i.imgur.com/GIkJNso.png' },
-            { id: 'kers', name: 'Kers', price: 6.50, image: 'https://i.imgur.com/pu7VLaH.png' },
-            { id: 'framboos', name: 'Framboos', price: 7.00, image: 'https://i.imgur.com/ZKfIJ0c.png' },
-            { id: 'aardbei', name: 'Aardbei', price: 6.00, image: 'https://i.imgur.com/tim0a3Z.png' },
-            { id: 'oreo', name: 'Oreo', price: 6.50, image: 'https://i.imgur.com/jsGkect.png' }
+            {name:"Vanille", price:7.5, img:"https://i.imgur.com/cJTOOc5.png"},
+            {name:"Speculoos", price:5.5, img:"https://i.imgur.com/GIkJNso.png"},
+            {name:"Kers", price:6.5, img:"https://i.imgur.com/pu7VLaH.png"},
+            {name:"Framboos", price:7.0, img:"https://i.imgur.com/ZKfIJ0c.png"},
+            {name:"Aardbei", price:6.0, img:"https://i.imgur.com/tim0a3Z.png"},
+            {name:"Oreo", price:6.5, img:"https://i.imgur.com/jsGkect.png"}
         ];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        const sheetDBUrl = 'https://sheetdb.io/api/v1/i1hu5kkuad2pt';
-
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        const productGrid = document.getElementById('product-grid');
-        const cartDrawer = document.getElementById('cart-drawer');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartBadge = document.getElementById('cart-item-count');
-        const cartTotal = document.getElementById('cart-total');
-        const checkoutModal = document.getElementById('checkout-modal');
-        const checkoutForm = document.getElementById('checkout-form');
-
-        // Render products
-        function renderProducts() {
-            productGrid.innerHTML = '';
-            products.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
+        function renderProducts(){
+            const grid = document.getElementById("productGrid");
+            grid.innerHTML = "";
+            products.forEach((p, idx) => {
+                const card = document.createElement("div");
+                card.className = "card";
                 card.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p class="price">€${product.price.toFixed(2)}</p>
-                    <div class="quantity-selector">
-                        <button class="minus-btn" data-id="${product.id}">-</button>
-                        <input type="number" class="quantity-input" data-id="${product.id}" value="1" min="1">
-                        <button class="plus-btn" data-id="${product.id}">+</button>
+                    <img src="${p.img}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p>€${p.price.toFixed(2)}/L</p>
+                    <div class="qty">
+                        <button onclick="changeQty(${idx},-1)">-</button>
+                        <input type="number" id="qty-${idx}" value="1" min="1">
+                        <button onclick="changeQty(${idx},1)">+</button>
                     </div>
-                    <button class="add-to-cart" data-id="${product.id}">Voeg toe</button>
-                `;
-                productGrid.appendChild(card);
+                    <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
+                grid.appendChild(card);
             });
         }
 
-        // Update cart display
-        function updateCart() {
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
-            let totalItems = 0;
-
-            cart.forEach(item => {
-                const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
-                const subtotal = item.price * item.quantity;
-                total += subtotal;
-                totalItems += item.quantity;
-                cartItem.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>${item.quantity} x €${item.price.toFixed(2)} = €${subtotal.toFixed(2)}</p>
-                    </div>
-                    <button class="remove-btn" data-id="${item.id}">Verwijder</button>
-                `;
-                cartItemsContainer.appendChild(cartItem);
-            });
-
-            cartTotal.textContent = `€${total.toFixed(2)}`;
-            cartBadge.textContent = totalItems;
-
-            localStorage.setItem('cart', JSON.stringify(cart));
+        function changeQty(idx, delta){
+            const input = document.getElementById("qty-"+idx);
+            let val = parseInt(input.value) + delta;
+            if(val < 1) val = 1;
+            input.value = val;
         }
 
-        // Add to cart functionality
-        productGrid.addEventListener('click', (e) => {
-            if (e.target.classList.contains('add-to-cart')) {
-                const id = e.target.dataset.id;
-                const quantityInput = e.target.closest('.product-card').querySelector('.quantity-input');
-                const quantity = parseInt(quantityInput.value, 10);
-                const product = products.find(p => p.id === id);
+        function addToCart(idx){
+            const qty = parseInt(document.getElementById("qty-"+idx).value);
+            const product = products[idx];
+            const existing = cart.find(i => i.name === product.name);
+            if(existing) existing.qty += qty;
+            else cart.push({...product, qty});
+            saveCart();
+            renderCart();
+            openCart(); // Open de winkelwagen na toevoegen
+        }
 
-                const existingItem = cart.find(item => item.id === id);
-                if (existingItem) {
-                    existingItem.quantity += quantity;
-                } else {
-                    cart.push({ ...product, quantity });
-                }
-                updateCart();
-            } else if (e.target.classList.contains('plus-btn')) {
-                const quantityInput = e.target.closest('.quantity-selector').querySelector('.quantity-input');
-                quantityInput.value = parseInt(quantityInput.value, 10) + 1;
-            } else if (e.target.classList.contains('minus-btn')) {
-                const quantityInput = e.target.closest('.quantity-selector').querySelector('.quantity-input');
-                if (parseInt(quantityInput.value, 10) > 1) {
-                    quantityInput.value = parseInt(quantityInput.value, 10) - 1;
-                }
+        function renderCart(){
+            const items = document.getElementById("cartItems");
+            const total = document.getElementById("cartTotal");
+            const count = document.querySelector(".cart-count");
+            items.innerHTML = "";
+            let sum = 0, liters = 0;
+            if(cart.length === 0) {
+                items.innerHTML = "<p style='text-align:center;'>Je winkelwagen is leeg.</p>";
             }
-        });
+            cart.forEach((item, i) => {
+                sum += item.price * item.qty;
+                liters += item.qty;
+                const line = document.createElement("div");
+                line.className = "line";
+                line.innerHTML = `<img src="${item.img}"><div>${item.name}<br>${item.qty} L · €${(item.price*item.qty).toFixed(2)}</div>
+                                  <button class="btn-ghost" onclick="removeItem(${i})">Verwijder</button>`;
+                items.appendChild(line);
+            });
+            total.textContent = sum.toFixed(2);
+            count.textContent = liters;
+        }
 
-        // Remove from cart
-        cartItemsContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-btn')) {
-                const id = e.target.dataset.id;
-                cart = cart.filter(item => item.id !== id);
-                updateCart();
+        function removeItem(i){
+            cart.splice(i,1);
+            saveCart();
+            renderCart();
+        }
+
+        function clearCart(){
+            if(confirm("Weet je zeker dat je alle items wilt verwijderen?")){
+                cart=[];
+                saveCart();
+                renderCart();
             }
-        });
+        }
 
-        // Clear cart
-        document.getElementById('clear-cart-btn').addEventListener('click', () => {
-            cart = [];
-            updateCart();
-        });
+        function saveCart(){
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
 
-        // Open/close cart drawer
-        document.getElementById('open-cart-btn').addEventListener('click', () => {
-            cartDrawer.classList.add('open');
-        });
-        document.getElementById('close-cart-btn').addEventListener('click', () => {
-            cartDrawer.classList.remove('open');
-        });
-        document.getElementById('view-cart-btn').addEventListener('click', () => {
-            cartDrawer.classList.add('open');
-        });
+        function openCart(){
+            document.getElementById("cartDrawer").classList.add("open");
+        }
 
-        // Checkout modal
-        document.getElementById('checkout-btn').addEventListener('click', () => {
-            if (cart.length > 0) {
-                checkoutModal.style.display = 'flex';
-                cartDrawer.classList.remove('open');
-            } else {
-                alert('Je winkelwagen is leeg!');
+        function closeCart(){
+            document.getElementById("cartDrawer").classList.remove("open");
+        }
+
+        function openCheckout(){
+            if(cart.length===0){
+                alert("Je winkelwagen is leeg!");
+                return;
             }
-        });
-        document.getElementById('cancel-btn').addEventListener('click', () => {
-            checkoutModal.style.display = 'none';
-        });
+            document.getElementById("checkoutModal").classList.add("show");
+            closeCart();
+        }
 
-        // Handle order submission
-        checkoutForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        function closeCheckout(){
+            document.getElementById("checkoutModal").classList.remove("show");
+        }
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const deliveryDate = document.getElementById('delivery-date').value;
-            
-            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            const productsList = cart.map(item => `${item.name} x ${item.quantity}`).join(', ');
+        function finishCheckout(){
+            const name = document.getElementById("modalCustomerName").value.trim();
+            const email = document.getElementById("modalCustomerEmail").value.trim();
+            const deliveryStr = document.getElementById("modalDeliveryTime").value.trim();
 
-            const now = new Date();
-            const timeStamp = `${now.toLocaleDateString('nl-NL')} ${now.toLocaleTimeString('nl-NL')}`;
+            if(!name || !email || !deliveryStr){
+                alert("Vul alle verplichte velden in!");
+                return;
+            }
+
+            const [year, month, day] = deliveryStr.split("-").map(Number);
+            const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
 
             const orderData = {
-                Tijd: timeStamp,
+                Tijd: new Date().toLocaleString("nl-BE"),
                 Naam: name,
                 Email: email,
-                Levermoment: deliveryDate,
-                Producten: productsList,
-                Totaal: `€${total.toFixed(2)}`,
+                Levermoment: leverDatumFormatted,
+                Producten: cart.map(i => `${i.name} x ${i.qty}`).join(", "),
+                Totaal: `€${document.getElementById("cartTotal").textContent}`,
                 Afgerond: false
             };
 
-            try {
-                const response = await fetch(sheetDBUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: orderData })
-                });
-
-                if (response.ok) {
-                    alert('Bestelling succesvol verzonden!');
-                    cart = [];
-                    updateCart();
-                    checkoutModal.style.display = 'none';
-                    checkoutForm.reset();
-                    document.getElementById('thank-you-message').style.display = 'block';
-                    setTimeout(() => {
-                        document.getElementById('thank-you-message').style.display = 'none';
-                    }, 5000);
-                } else {
-                    alert('Er ging iets mis met de bestelling. Probeer het opnieuw.');
-                }
-            } catch (error) {
-                console.error('Error submitting order:', error);
-                alert('Er ging iets mis met de bestelling. Controleer je internetverbinding.');
-            }
-        });
+            fetch("https://sheetdb.io/api/v1/i1hu5kkuad2pt",{
+                method:"POST",
+                body: JSON.stringify({data: orderData}),
+                headers: {"Content-Type":"application/json"}
+            })
+            .then(r => r.json())
+            .then(d => {
+                console.log("Bestelling opgeslagen:", d);
+                alert(`Bedankt voor je bestelling, ${name}!`);
+                closeCheckout();
+                cart=[];
+                saveCart();
+                renderCart();
+                document.getElementById("modalCustomerName").value = "";
+                document.getElementById("modalCustomerEmail").value = "";
+                document.getElementById("modalDeliveryTime").value = "";
+            })
+            .catch(err => {
+                console.error("Fout bij opslaan bestelling:", err);
+                alert("Er is een fout opgetreden. Probeer het later opnieuw.");
+            });
+        }
         
-        // Initial render
-        renderProducts();
-        updateCart();
+        // Initialisatie
+        document.addEventListener("DOMContentLoaded", () => {
+            renderProducts();
+            renderCart();
+        });
     </script>
 </body>
 </html>
