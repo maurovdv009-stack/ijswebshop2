@@ -716,6 +716,11 @@
         const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/pnz12bqkys5sc';
 
         let cart = [];
+        
+        // Functie om een unieke, tijdgebaseerde ID te genereren
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
 
         function renderCart() {
             cartItemsList.innerHTML = '';
@@ -871,6 +876,9 @@
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const orderItems = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
+            
+            // Genereer een unieke ID voor de bestelling
+            const orderID = generateUniqueId();
 
             // Verzend de bestelling naar SheetDB
             try {
@@ -882,6 +890,7 @@
                     },
                     body: JSON.stringify({
                         data: {
+                            ID: orderID, // Voeg de unieke ID toe
                             Naam: name,
                             Email: email,
                             Ophaaldatum: pickupDate,
