@@ -1,195 +1,639 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<title>Ijssalon — Online</title>
-<style>
-:root {--bg:#1f1f1f;--fg:#f0f0f0;--card:#2b2b2b;--border:#444;--accent:#3fa9f5;--accent-hover:#2d89d8;}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);}
-header{display:flex;justify-content:space-between;align-items:center;padding:1em 2em;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
-.brand{display:flex;align-items:center;gap:0.8em;}
-.brand-logo{background:black;color:white;border-radius:0.4em;padding:0.3em 0.6em;font-weight:bold;}
-.search{flex:1;margin:0 2em;display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:0.5em;padding:0.4em 0.8em;}
-.search input{background:transparent;border:none;outline:none;color:var(--fg);flex:1;margin-left:0.5em;}
-.cart-btn{position:relative;}
-.cart-count{position:absolute;top:-8px;right:-8px;background:var(--accent);color:#fff;border-radius:50%;font-size:0.75em;padding:0.2em 0.5em;}
-.hero{display:flex;justify-content:space-between;align-items:center;padding:2em;}
-.hero-text h1{font-size:2.5em;margin:0 0 0.5em;}
-.hero-buttons{display:flex;gap:1em;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5em;padding:2em;}
-.card{background:var(--card);border-radius:1em;padding:1.2em;text-align:center;transition:transform 0.2s ease;}
-.card:hover{transform:translateY(-5px);}
-.card img{width:120px;height:120px;border-radius:50%;margin-bottom:1em;}
-.qty{display:flex;justify-content:center;align-items:center;margin:1em 0;gap:0.5em;}
-.qty input{width:60px;text-align:center;background:var(--bg);border:1px solid var(--border);border-radius:0.4em;color:var(--fg);padding:0.3em;}
-.qty button{background:var(--accent);border:none;color:#fff;border-radius:0.4em;padding:0.3em 0.6em;cursor:pointer;font-weight:bold;transition:all 0.2s ease;}
-.qty button:hover{background:var(--accent-hover);transform:scale(1.1);}
-.btn,.add{background:var(--accent);color:#fff;border:none;padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
-.btn:hover,.add:hover{background:var(--accent-hover);transform:scale(1.05);box-shadow:0 0 12px rgba(63,169,245,0.4);}
-.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:0.6em 1.2em;border-radius:0.6em;cursor:pointer;transition:all 0.2s ease;}
-.btn-ghost:hover{background:rgba(63,169,245,0.1);border-color:var(--accent-hover);color:var(--accent-hover);transform:scale(1.05);}
-.cart{position:fixed;top:0;right:0;width:320px;height:100%;background:var(--card);border-left:1px solid var(--border);transform:translateX(100%);transition:transform 0.3s ease;z-index:20;display:flex;flex-direction:column;}
-.cart.open{transform:translateX(0);}
-.cart-header{display:flex;justify-content:space-between;align-items:center;padding:1em;border-bottom:1px solid var(--border);}
-.close-cart{background:var(--accent);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:1.2rem;cursor:pointer;transition:all 0.2s ease;}
-.close-cart:hover{background:var(--accent-hover);transform:rotate(90deg) scale(1.1);}
-.cart-items{flex:1;overflow-y:auto;padding:1em;}
-.line{display:flex;align-items:center;justify-content:space-between;margin-bottom:1em;}
-.line img{width:40px;height:40px;border-radius:50%;margin-right:0.5em;}
-#checkoutModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:50;justify-content:center;align-items:center;}
-#checkoutModal.show{display:flex;animation:fadeIn 0.3s ease;}
-#checkoutModal .modal-content{background:var(--card);padding:2.5em;border-radius:1.2em;max-width:420px;width:90%;box-shadow:0 8px 30px rgba(0,0,0,0.5);color:var(--fg);transform:translateY(-30px);opacity:0;animation:slideDown 0.3s forwards;}
-#checkoutModal label{display:block;margin:1.2em 0 0.4em;font-weight:500;}
-#checkoutModal input{width:100%;padding:0.6em;border-radius:0.6em;border:1px solid var(--border);background:var(--bg);color:var(--fg);font-size:1em;}
-#checkoutModal .modal-buttons{display:flex;justify-content:flex-end;gap:1em;margin-top:1.5em;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes slideDown{from{transform:translateY(-30px);opacity:0;}to{transform:translateY(0);opacity:1);}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ijssalon Mauro - Online</title>
+    <style>
+        :root {
+            --dark-bg: #1f1f1f;
+            --card-bg: #2b2b2b;
+            --accent-blue: #3fa9f5;
+            --text-color: #f5f5f5;
+            --gold: #FFD700;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--gold);
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            margin: 0;
+            font-size: 1.5em;
+            color: var(--text-color);
+        }
+
+        .logo-text p {
+            margin: 0;
+            font-size: 0.8em;
+            color: var(--text-color);
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 50px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+        }
+
+        .cart-button {
+            position: relative;
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-button:hover {
+            background-color: #2e8b57; /* A darker green for hover, as per the previous example, but can be adjusted */
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--gold);
+            color: var(--dark-bg);
+            border-radius: 50%;
+            padding: 5px 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 100px 20px;
+            background-color: var(--card-bg);
+            margin: 20px;
+            border-radius: 10px;
+        }
+
+        .hero-section h2 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        .hero-section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .hero-section button {
+            padding: 15px 30px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        .hero-section button:hover {
+            background-color: #2e8b57;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0 5px;
+        }
+
+        .product-card .price {
+            color: var(--accent-blue);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector button {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .quantity-selector input {
+            width: 40px;
+            text-align: center;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            border: none;
+            margin: 0 5px;
+        }
+
+        .add-to-cart {
+            padding: 10px 20px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #2e8b57;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: var(--card-bg);
+            padding: 20px;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+            transition: right 0.5s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .cart-drawer.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-info h4 {
+            margin: 0;
+        }
+
+        .cart-item-info p {
+            margin: 5px 0 0;
+            color: var(--accent-blue);
+        }
+
+        .cart-item button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-footer {
+            margin-top: 20px;
+            border-top: 1px solid var(--dark-bg);
+            padding-top: 20px;
+        }
+
+        .cart-footer .total {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cart-footer button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        #checkout-btn {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        #clear-cart-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            color: var(--text-color);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--gold);
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: var(--dark-bg);
+            border: 1px solid #444;
+            color: var(--text-color);
+            border-radius: 5px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #cancel-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #submit-order-btn {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        #thank-you-message {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-<div class="brand"><div class="brand-logo">IJ</div><div><div>Ijssalon — Online</div><small>Vers, ambachtelijk & per liter</small></div></div>
-<div class="search"><input id="searchInput" placeholder="Zoek smaak... (bv. vanille)"></div>
-<button class="btn cart-btn" onclick="openCart()">Winkelwagen<span class="cart-count">0</span></button>
-</header>
+    <header>
+        <div class="logo-container">
+            <span class="logo">IJ</span>
+            <div class="logo-text">
+                <h1>Ijssalon — Online</h1>
+                <p>Vers, ambachtelijk & per liter</p>
+            </div>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Zoek naar smaken...">
+        </div>
+        <button class="cart-button" id="open-cart-btn">
+            Winkelwagen
+            <span class="cart-badge" id="cart-item-count">0</span>
+        </button>
+    </header>
 
-<section class="hero">
-<div class="hero-text"><h1>Beste ijs, per liter</h1><p>Bestel eenvoudig je favoriete smaken online.</p>
-<div class="hero-buttons"><button class="btn" onclick="openCart()">Bekijk winkelwagen</button></div></div>
-</section>
+    <main>
+        <div class="hero-section">
+            <h2>Beste ijs, per liter</h2>
+            <p>Bestel eenvoudig je favoriete smaken online.</p>
+            <button id="view-cart-btn">Bekijk winkelwagen</button>
+        </div>
 
-<main class="grid" id="productGrid"></main>
+        <div class="product-grid" id="product-grid">
+            </div>
 
-<aside class="cart" id="cartDrawer">
-<div class="cart-header"><h2>Winkelwagen</h2><button class="close-cart" onclick="closeCart()">×</button></div>
-<div class="cart-items" id="cartItems"></div>
-<div class="cart-footer">
-    <p>Totaal: €<span id="cartTotal">0.00</span></p>
-    <div class="hero-buttons">
-        <button class="btn" onclick="openCheckout()">Naar afrekenen</button>
-        <button class="btn-ghost" onclick="clearCart()">Leeg winkelwagen</button>
+        <div id="thank-you-message">
+            <p>Hartelijk dank voor je bestelling! 🎉 We hebben je aanvraag ontvangen en nemen contact met je op.</p>
+        </div>
+    </main>
+
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Jouw winkelwagen</h3>
+            <button id="close-cart-btn">X</button>
+        </div>
+        <div id="cart-items">
+            </div>
+        <div class="cart-footer">
+            <div class="total">Totaal: <span id="cart-total">€0.00</span></div>
+            <button id="clear-cart-btn">Leeg winkelwagen</button>
+            <button id="checkout-btn">Naar afrekenen</button>
+        </div>
     </div>
-</div>
-</aside>
 
-<div id="checkoutModal">
-<div class="modal-content">
-<h2>Gegevens invullen</h2>
-<label>Naam:<br><input id="modalCustomerName" placeholder="Volledige naam"></label>
-<label>E-mail:<br><input id="modalCustomerEmail" type="email" placeholder="jouw@email.com"></label>
-<label>Leverdatum:<br><input id="modalDeliveryTime" type="date" required></label>
-<div class="modal-buttons"><button class="btn-ghost" onclick="closeCheckout()">Annuleren</button><button class="btn" onclick="finishCheckout()">Bestelling afronden</button></div>
-</div>
-</div>
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <h2>Afrekenen</h2>
+            <form id="checkout-form">
+                <label for="name">Naam:</label>
+                <input type="text" id="name" name="name" required>
 
-<script>
-const products=[
-  {name:"Vanille",price:7.5,img:"https://i.imgur.com/cJTOOc5.png"},
-  {name:"Speculoos",price:5.5,img:"https://i.imgur.com/GIkJNso.png"},
-  {name:"Kers",price:6.5,img:"https://i.imgur.com/pu7VLaH.png"},
-  {name:"Framboos",price:7.0,img:"https://i.imgur.com/ZKfIJ0c.png"},
-  {name:"Aardbei",price:6.0,img:"https://i.imgur.com/tim0a3Z.png"},
-  {name:"Oreo",price:6.5,img:"https://i.imgur.com/jsGkect.png"}
-];
-let cart = JSON.parse(localStorage.getItem("cart"))||[];
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
 
-function renderProducts(){
-  const grid=document.getElementById("productGrid");
-  grid.innerHTML="";
-  products.forEach((p,idx)=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`<img src="${p.img}" alt="${p.name}"><h3>${p.name}</h3><p>€${p.price.toFixed(2)}/L</p>
-    <div class="qty"><button onclick="changeQty(${idx},-1)">-</button><input type="number" id="qty-${idx}" value="1" min="1"><button onclick="changeQty(${idx},1)">+</button></div>
-    <button class="add" onclick="addToCart(${idx})">Voeg toe</button>`;
-    grid.appendChild(card);
-  });
-}
+                <label for="delivery-date">Leverdatum:</label>
+                <input type="date" id="delivery-date" name="delivery-date" required>
 
-function changeQty(idx,delta){
-  const input=document.getElementById("qty-"+idx);
-  let val=parseInt(input.value)+delta;
-  if(val<1) val=1;
-  input.value=val;
-}
+                <div class="modal-buttons">
+                    <button type="button" id="cancel-btn">Annuleren</button>
+                    <button type="submit" id="submit-order-btn">Bestelling afronden</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-function addToCart(idx){
-  const qty=parseInt(document.getElementById("qty-"+idx).value);
-  const product=products[idx];
-  const existing=cart.find(i=>i.name===product.name);
-  if(existing) existing.qty+=qty; else cart.push({...product,qty});
-  saveCart(); renderCart();
-}
+    <script>
+        const products = [
+            { id: 'vanille', name: 'Vanille', price: 7.50, image: 'https://i.imgur.com/cJTOOc5.png' },
+            { id: 'speculoos', name: 'Speculoos', price: 5.50, image: 'https://i.imgur.com/GIkJNso.png' },
+            { id: 'kers', name: 'Kers', price: 6.50, image: 'https://i.imgur.com/pu7VLaH.png' },
+            { id: 'framboos', name: 'Framboos', price: 7.00, image: 'https://i.imgur.com/ZKfIJ0c.png' },
+            { id: 'aardbei', name: 'Aardbei', price: 6.00, image: 'https://i.imgur.com/tim0a3Z.png' },
+            { id: 'oreo', name: 'Oreo', price: 6.50, image: 'https://i.imgur.com/jsGkect.png' }
+        ];
 
-function renderCart(){
-  const items=document.getElementById("cartItems");
-  const total=document.getElementById("cartTotal");
-  const count=document.querySelector(".cart-count");
-  items.innerHTML=""; let sum=0,liters=0;
-  cart.forEach((item,i)=>{
-    sum+=item.price*item.qty; liters+=item.qty;
-    const line=document.createElement("div");
-    line.className="line";
-    line.innerHTML=`<img src="${item.img}"><div>${item.name}<br>${item.qty} L · €${(item.price*item.qty).toFixed(2)}</div><button class="btn-ghost" onclick="removeItem(${i})">Verwijder</button>`;
-    items.appendChild(line);
-  });
-  total.textContent=sum.toFixed(2);
-  count.textContent=liters;
-}
+        const sheetDBUrl = 'https://sheetdb.io/api/v1/i1hu5kkuad2pt';
 
-function removeItem(i){cart.splice(i,1); saveCart(); renderCart();}
-function clearCart(){if(confirm("Weet je zeker?")){cart=[]; saveCart(); renderCart();}}
-function saveCart(){localStorage.setItem("cart",JSON.stringify(cart));}
-function openCart(){document.getElementById("cartDrawer").classList.add("open");}
-function closeCart(){document.getElementById("cartDrawer").classList.remove("open");}
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function openCheckout(){
-  if(cart.length===0){alert("Je winkelwagen is leeg!");return;}
-  document.getElementById("checkoutModal").classList.add("show");
-}
-function closeCheckout(){document.getElementById("checkoutModal").classList.remove("show");}
+        const productGrid = document.getElementById('product-grid');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartBadge = document.getElementById('cart-item-count');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const checkoutForm = document.getElementById('checkout-form');
 
-function finishCheckout(){
-  const name=document.getElementById("modalCustomerName").value.trim();
-  const email=document.getElementById("modalCustomerEmail").value.trim();
-  const deliveryStr=document.getElementById("modalDeliveryTime").value.trim();
-  if(!name||!email||!deliveryStr){alert("Vul alles in!"); return;}
-  const [year,month,day]=deliveryStr.split("-").map(Number);
-  const leverDatumFormatted = `${day.toString().padStart(2,"0")}/${month.toString().padStart(2,"0")}/${year}`;
+        // Render products
+        function renderProducts() {
+            productGrid.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p class="price">€${product.price.toFixed(2)}</p>
+                    <div class="quantity-selector">
+                        <button class="minus-btn" data-id="${product.id}">-</button>
+                        <input type="number" class="quantity-input" data-id="${product.id}" value="1" min="1">
+                        <button class="plus-btn" data-id="${product.id}">+</button>
+                    </div>
+                    <button class="add-to-cart" data-id="${product.id}">Voeg toe</button>
+                `;
+                productGrid.appendChild(card);
+            });
+        }
 
-  const orderData = {
-    Tijd: new Date().toLocaleString("nl-BE"),
-    Naam: name,
-    Email: email,
-    Levermoment: leverDatumFormatted,
-    Producten: cart.map(i=>`${i.name} x ${i.qty}`).join(", "),
-    Totaal: document.getElementById("cartTotal").textContent,
-    Afgerond: false
-  };
+        // Update cart display
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let totalItems = 0;
 
-  fetch("https://sheetdb.io/api/v1/i1hu5kkuad2pt", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({data:[orderData]})
-  })
-  .then(res=>res.json())
-  .then(d=>{
-    console.log("Bestelling opgeslagen:",d);
-    alert(`Bedankt voor je bestelling, ${name}!`);
-    cart=[]; saveCart(); renderCart();
-    document.getElementById("modalCustomerName").value="";
-    document.getElementById("modalCustomerEmail").value="";
-    document.getElementById("modalDeliveryTime").value="";
-    closeCheckout();
-  })
-  .catch(err=>{
-    console.error(err);
-    alert("Er is een fout opgetreden bij het opslaan van je bestelling.");
-  });
-}
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                totalItems += item.quantity;
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>${item.quantity} x €${item.price.toFixed(2)} = €${subtotal.toFixed(2)}</p>
+                    </div>
+                    <button class="remove-btn" data-id="${item.id}">Verwijder</button>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
 
-renderProducts(); renderCart();
-</script>
+            cartTotal.textContent = `€${total.toFixed(2)}`;
+            cartBadge.textContent = totalItems;
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Add to cart functionality
+        productGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-to-cart')) {
+                const id = e.target.dataset.id;
+                const quantityInput = e.target.closest('.product-card').querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value, 10);
+                const product = products.find(p => p.id === id);
+
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({ ...product, quantity });
+                }
+                updateCart();
+            } else if (e.target.classList.contains('plus-btn')) {
+                const quantityInput = e.target.closest('.quantity-selector').querySelector('.quantity-input');
+                quantityInput.value = parseInt(quantityInput.value, 10) + 1;
+            } else if (e.target.classList.contains('minus-btn')) {
+                const quantityInput = e.target.closest('.quantity-selector').querySelector('.quantity-input');
+                if (parseInt(quantityInput.value, 10) > 1) {
+                    quantityInput.value = parseInt(quantityInput.value, 10) - 1;
+                }
+            }
+        });
+
+        // Remove from cart
+        cartItemsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-btn')) {
+                const id = e.target.dataset.id;
+                cart = cart.filter(item => item.id !== id);
+                updateCart();
+            }
+        });
+
+        // Clear cart
+        document.getElementById('clear-cart-btn').addEventListener('click', () => {
+            cart = [];
+            updateCart();
+        });
+
+        // Open/close cart drawer
+        document.getElementById('open-cart-btn').addEventListener('click', () => {
+            cartDrawer.classList.add('open');
+        });
+        document.getElementById('close-cart-btn').addEventListener('click', () => {
+            cartDrawer.classList.remove('open');
+        });
+        document.getElementById('view-cart-btn').addEventListener('click', () => {
+            cartDrawer.classList.add('open');
+        });
+
+        // Checkout modal
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            if (cart.length > 0) {
+                checkoutModal.style.display = 'flex';
+                cartDrawer.classList.remove('open');
+            } else {
+                alert('Je winkelwagen is leeg!');
+            }
+        });
+        document.getElementById('cancel-btn').addEventListener('click', () => {
+            checkoutModal.style.display = 'none';
+        });
+
+        // Handle order submission
+        checkoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const productsList = cart.map(item => `${item.name} x ${item.quantity}`).join(', ');
+
+            const now = new Date();
+            const timeStamp = `${now.toLocaleDateString('nl-NL')} ${now.toLocaleTimeString('nl-NL')}`;
+
+            const orderData = {
+                Tijd: timeStamp,
+                Naam: name,
+                Email: email,
+                Levermoment: deliveryDate,
+                Producten: productsList,
+                Totaal: `€${total.toFixed(2)}`,
+                Afgerond: false
+            };
+
+            try {
+                const response = await fetch(sheetDBUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: orderData })
+                });
+
+                if (response.ok) {
+                    alert('Bestelling succesvol verzonden!');
+                    cart = [];
+                    updateCart();
+                    checkoutModal.style.display = 'none';
+                    checkoutForm.reset();
+                    document.getElementById('thank-you-message').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('thank-you-message').style.display = 'none';
+                    }, 5000);
+                } else {
+                    alert('Er ging iets mis met de bestelling. Probeer het opnieuw.');
+                }
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                alert('Er ging iets mis met de bestelling. Controleer je internetverbinding.');
+            }
+        });
+        
+        // Initial render
+        renderProducts();
+        updateCart();
+    </script>
 </body>
 </html>
