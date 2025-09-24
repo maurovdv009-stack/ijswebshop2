@@ -121,52 +121,6 @@
         .hidden {
             display: none;
         }
-        
-        /* Custom Alert Styles */
-        .custom-alert-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .custom-alert-box {
-            background-color: var(--card-background);
-            color: var(--text-color);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .custom-alert-box p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        .custom-alert-ok-btn {
-            background-color: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-
-        .custom-alert-ok-btn:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -189,27 +143,19 @@
             
             <div class="flavors-section">
                 <h2>Smaken</h2>
-                <div class="flavor-item" data-price="7.50">
+                <div class="flavor-item" data-price="10.00">
                     <span>Vanille</span>
                     <input type="number" min="0" value="0" data-flavor-name="Vanille">
                 </div>
-                <div class="flavor-item" data-price="5.50">
-                    <span>Speculoos</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Speculoos">
+                <div class="flavor-item" data-price="12.00">
+                    <span>Chocolade</span>
+                    <input type="number" min="0" value="0" data-flavor-name="Chocolade">
                 </div>
-                <div class="flavor-item" data-price="6.50">
-                    <span>Kers</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Kers">
-                </div>
-                <div class="flavor-item" data-price="7.00">
-                    <span>Framboos</span>
-                    <input type="number" min="0" value="0" data-flavor-name="Framboos">
-                </div>
-                 <div class="flavor-item" data-price="8.00">
+                <div class="flavor-item" data-price="11.50">
                     <span>Aardbei</span>
                     <input type="number" min="0" value="0" data-flavor-name="Aardbei">
                 </div>
-                 <div class="flavor-item" data-price="9.00">
+                <div class="flavor-item" data-price="13.00">
                     <span>Oreo</span>
                     <input type="number" min="0" value="0" data-flavor-name="Oreo">
                 </div>
@@ -221,13 +167,6 @@
                 <i class="fas fa-paper-plane"></i> Bestelling plaatsen
             </button>
         </form>
-    </div>
-
-    <div id="custom-alert" class="custom-alert-container hidden">
-        <div class="custom-alert-box">
-            <p id="custom-alert-message"></p>
-            <button id="custom-alert-ok-btn" class="custom-alert-ok-btn">OK</button>
-        </div>
     </div>
 
     <script>
@@ -243,23 +182,6 @@
                 total += quantity * price;
             });
             totalPriceDisplay.textContent = `Totaal: €${total.toFixed(2).replace('.', ',')}`;
-        }
-
-        // Functie voor de aangepaste meldingen
-        function showAlert(message) {
-            const customAlert = document.getElementById('custom-alert');
-            const customAlertMessage = document.getElementById('custom-alert-message');
-            const customAlertOkBtn = document.getElementById('custom-alert-ok-btn');
-
-            customAlertMessage.textContent = message;
-            customAlert.classList.remove('hidden');
-
-            return new Promise(resolve => {
-                customAlertOkBtn.onclick = () => {
-                    customAlert.classList.add('hidden');
-                    resolve();
-                };
-            });
         }
 
         numberInputs.forEach(input => {
@@ -295,7 +217,7 @@
             });
 
             if (orderData.Items.length === 0) {
-                showAlert('Plaats minstens 1 bestelling.');
+                alert('Plaats minstens 1 bestelling.');
                 return;
             }
 
@@ -311,15 +233,15 @@
                 });
 
                 if (response.ok) {
-                    await showAlert('Bestelling succesvol geplaatst!');
+                    alert('Bestelling succesvol geplaatst!');
                     form.reset();
                     updateTotalPrice();
                 } else {
-                    showAlert('Er ging iets fout bij het plaatsen van de bestelling.');
+                    alert('Er ging iets fout bij het plaatsen van de bestelling.');
                 }
             } catch (error) {
                 console.error('Fout:', error);
-                showAlert('Er kon geen verbinding gemaakt worden met de server.');
+                alert('Er kon geen verbinding gemaakt worden met de server.');
             }
         });
     </script>
