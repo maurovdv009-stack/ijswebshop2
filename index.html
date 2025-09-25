@@ -1,4 +1,3 @@
-webshop:
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -568,89 +567,7 @@ webshop:
 
         <section class="product-container">
             <div class="product-grid" id="productGrid">
-                <div class="product-card" data-name="Vanille" data-price="7.50" data-img="https://i.imgur.com/cJTOOc5.png">
-                    <img src="https://i.imgur.com/cJTOOc5.png" alt="Vanille ijs">
-                    <div class="product-info">
-                        <h3>Vanille</h3>
-                        <p>€7.50/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="Speculoos" data-price="5.50" data-img="https://i.imgur.com/GIkJNso.png">
-                    <img src="https://i.imgur.com/GIkJNso.png" alt="Speculoos ijs">
-                    <div class="product-info">
-                        <h3>Speculoos</h3>
-                        <p>€5.50/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="Kers" data-price="6.50" data-img="https://i.imgur.com/pu7VLaH.png">
-                    <img src="https://i.imgur.com/pu7VLaH.png" alt="Kers ijs">
-                    <div class="product-info">
-                        <h3>Kers</h3>
-                        <p>€6.50/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="Framboos" data-price="7.00" data-img="https://i.imgur.com/ZKfIJ0c.png">
-                    <img src="https://i.imgur.com/ZKfIJ0c.png" alt="Framboos ijs">
-                    <div class="product-info">
-                        <h3>Framboos</h3>
-                        <p>€7.00/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="Aardbei" data-price="6.00" data-img="https://i.imgur.com/tim0a3Z.png">
-                    <img src="https://i.imgur.com/tim0a3Z.png" alt="Aardbei ijs">
-                    <div class="product-info">
-                        <h3>Aardbei</h3>
-                        <p>€6.00/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="Oreo" data-price="6.50" data-img="https://i.imgur.com/jsGkect.png">
-                    <img src="https://i.imgur.com/jsGkect.png" alt="Oreo ijs">
-                    <div class="product-info">
-                        <h3>Oreo</h3>
-                        <p>€6.50/L</p>
-                        <div class="quantity-selector">
-                            <button class="quantity-minus">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">Voeg toe</button>
-                    </div>
-                </div>
+                <!-- Producten worden dynamisch geladen vanuit SheetDB -->
             </div>
         </section>
     </main>
@@ -695,7 +612,12 @@ webshop:
     </div>
 
     <script>
-        const productCards = document.querySelectorAll('.product-card');
+        // --- Config: SheetDB endpoints ---
+        const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
+        const SHEETDB_ORDERS_URL = "https://sheetdb.io/api/v1/pnz12bqkys5sc";
+
+        // --- Element references ---
+        const productGrid = document.getElementById('productGrid');
         const cartItemsList = document.getElementById('cart-items-list');
         const cartTotalPrice = document.getElementById('cart-total-price');
         const cartItemCount = document.getElementById('cartItemCount');
@@ -713,16 +635,15 @@ webshop:
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const pickupDateInput = document.getElementById('pickupDate');
-        
-        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/pnz12bqkys5sc';
 
         let cart = [];
-        
-        // Functie om een unieke, tijdgebaseerde ID te genereren
+
+        // Unieke ID generator
         function generateUniqueId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
         }
 
+        // Render winkelwagen
         function renderCart() {
             cartItemsList.innerHTML = '';
             let total = 0;
@@ -755,42 +676,62 @@ webshop:
                 checkoutBtn.style.opacity = '1';
                 checkoutBtn.style.cursor = 'pointer';
             }
-            
+
             cartTotalPrice.textContent = `€${total.toFixed(2).replace('.', ',')}`;
             cartItemCount.textContent = totalItems;
         }
 
+        // Verwijder item op naam
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             renderCart();
         }
 
-        productCards.forEach(card => {
-            const productName = card.dataset.name;
-            const productPrice = parseFloat(card.dataset.price);
-            const productImg = card.dataset.img;
-            const quantityInput = card.querySelector('.quantity-input');
+        // Voeg productkaart toe aan grid en koppel events
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.classList.add('product-card');
+            card.dataset.name = product.naam;
+            card.dataset.price = product.prijs;
+            card.dataset.img = product.afbeelding_url || '';
+
+            card.innerHTML = `
+                <img src="${product.afbeelding_url || ''}" alt="${product.naam} ijs">
+                <div class="product-info">
+                    <h3>${product.naam}</h3>
+                    <p>€${parseFloat(product.prijs).toFixed(2)}/L</p>
+                    <div class="quantity-selector">
+                        <button class="quantity-minus">-</button>
+                        <input type="number" value="1" min="1" class="quantity-input">
+                        <button class="quantity-plus">+</button>
+                    </div>
+                    <button class="add-to-cart-btn">Voeg toe</button>
+                </div>
+            `;
+
+            // koppel events voor deze kaart
             const minusButton = card.querySelector('.quantity-minus');
             const plusButton = card.querySelector('.quantity-plus');
+            const quantityInput = card.querySelector('.quantity-input');
             const addToCartButton = card.querySelector('.add-to-cart-btn');
 
             minusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
+                let currentValue = parseInt(quantityInput.value) || 1;
+                if (currentValue > 1) quantityInput.value = currentValue - 1;
             });
 
             plusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value);
+                let currentValue = parseInt(quantityInput.value) || 1;
                 quantityInput.value = currentValue + 1;
             });
 
             addToCartButton.addEventListener('click', () => {
-                const quantity = parseInt(quantityInput.value);
-                if (quantity < 1) return;
+                const quantity = Math.max(1, parseInt(quantityInput.value) || 1);
+                const productName = card.dataset.name;
+                const productPrice = parseFloat(card.dataset.price) || 0;
+                const productImg = card.dataset.img || '';
 
-                const existingItem = cart.find(item => item.name === productName);
+                const existingItem = cart.find(i => i.name === productName);
                 if (existingItem) {
                     existingItem.quantity += quantity;
                 } else {
@@ -804,9 +745,60 @@ webshop:
                 renderCart();
                 quantityInput.value = 1;
             });
+
+            productGrid.appendChild(card);
+        }
+
+        // Laad producten uit SheetDB en maak kaarten
+        function loadProducts() {
+            productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Producten laden…</p>';
+            fetch(SHEETDB_PRODUCTS_URL)
+                .then(res => {
+                    if (!res.ok) throw new Error('Netwerk response niet ok');
+                    return res.json();
+                })
+                .then(data => {
+                    productGrid.innerHTML = ''; // leegmaken
+                    data.forEach(p => {
+                        // Bescherm tegen lege/unknown waarden en controleer zichtbaar
+                        const visible = (p.zichtbaar || '').toString().toLowerCase();
+                        if (visible === 'ja' || visible === 'true' || p.zichtbaar === undefined) {
+                            createProductCard(p);
+                        }
+                    });
+                    // als er geen producten zichtbaar zijn
+                    if (productGrid.children.length === 0) {
+                        productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Geen producten beschikbaar.</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error('Fout bij laden producten:', err);
+                    productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Kon producten niet laden. Controleer je SheetDB-link.</p>';
+                });
+        }
+
+        // Eventdelegatie voor verwijderen in winkelwagen
+        cartItemsList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-item-btn')) {
+                const name = event.target.dataset.name;
+                removeFromCart(name);
+            }
         });
 
-        // Event Listeners voor de knoppen
+        // Zoekfunctie (werkt op dynamische kaarten)
+        searchInput.addEventListener('keyup', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                const productName = (card.dataset.name || '').toLowerCase();
+                if (productName.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+
+        // Winkelwagen open/close
         toggleCartButton.addEventListener('click', () => {
             cartSidebar.classList.toggle('open');
         });
@@ -824,27 +816,7 @@ webshop:
             renderCart();
         });
 
-        cartItemsList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('remove-item-btn')) {
-                const productName = event.target.dataset.name;
-                removeFromCart(productName);
-            }
-        });
-
-        // Zoekfunctie
-        searchInput.addEventListener('keyup', (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            productCards.forEach(card => {
-                const productName = card.dataset.name.toLowerCase();
-                if (productName.includes(searchTerm)) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-        });
-
-        // Checkout functionaliteit
+        // Checkout overlay
         checkoutBtn.addEventListener('click', () => {
             if (cart.length > 0) {
                 cartSidebar.classList.remove('open');
@@ -856,17 +828,17 @@ webshop:
             checkoutOverlay.classList.remove('active');
         });
 
+        // Submit checkout
         checkoutForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const name = nameInput.value;
-            const email = emailInput.value;
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
             const pickupDate = pickupDateInput.value;
-            
+
             const selectedDate = new Date(pickupDate);
             const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
+            today.setHours(0,0,0,0);
             const minDate = new Date();
             minDate.setDate(today.getDate() + 7);
 
@@ -877,13 +849,11 @@ webshop:
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const orderItems = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
-            
-            // Genereer een unieke ID voor de bestelling
+
             const orderID = generateUniqueId();
 
-            // Verzend de bestelling naar SheetDB
             try {
-                const response = await fetch(SHEETDB_API_URL, {
+                const response = await fetch(SHEETDB_ORDERS_URL, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -891,7 +861,7 @@ webshop:
                     },
                     body: JSON.stringify({
                         data: {
-                            ID: orderID, // Voeg de unieke ID toe
+                            ID: orderID,
                             Naam: name,
                             Email: email,
                             Ophaaldatum: pickupDate,
@@ -903,7 +873,6 @@ webshop:
 
                 if (response.ok) {
                     alert('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
-                    // Leeg het winkelmandje en verberg de overlay
                     cart = [];
                     renderCart();
                     checkoutOverlay.classList.remove('active');
@@ -911,16 +880,18 @@ webshop:
                     emailInput.value = '';
                     pickupDateInput.value = '';
                 } else {
+                    console.error('SheetDB response niet ok', response.status, await response.text());
                     throw new Error('Er is een fout opgetreden bij het verzenden van de bestelling.');
                 }
             } catch (error) {
-                console.error('Fout:', error);
+                console.error('Fout bij verzenden bestelling:', error);
                 alert('Er is een fout opgetreden. Probeer het later opnieuw.');
             }
         });
 
-        // Initial call to set up the empty cart
+        // Initialisatie
         renderCart();
+        loadProducts();
     </script>
 </body>
 </html>
