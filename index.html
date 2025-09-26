@@ -523,6 +523,16 @@
             opacity: 0;
             display: none;
             transition: opacity 0.5s ease;
+            max-width: 90%;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .order-message {
+                font-size: 0.9rem;
+                padding: 12px 20px;
+            }
         }
 
         /* Responsive adjustments */
@@ -628,13 +638,14 @@
         </div>
     </div>
 
-    <!-- Melding -->
     <div class="order-message" id="orderMessage"></div>
 
     <script>
+        // --- Config: SheetDB endpoints ---
         const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
         const SHEETDB_ORDERS_URL = "https://sheetdb.io/api/v1/pnz12bqkys5sc";
 
+        // --- Element references ---
         const productGrid = document.getElementById('productGrid');
         const cartItemsList = document.getElementById('cart-items-list');
         const cartTotalPrice = document.getElementById('cart-total-price');
@@ -653,6 +664,7 @@
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const pickupDateInput = document.getElementById('pickupDate');
+
         const orderMessage = document.getElementById('orderMessage');
 
         let cart = [];
@@ -661,14 +673,16 @@
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
         }
 
-        function showMessage(message) {
+        function showOrderMessage(message) {
             orderMessage.textContent = message;
             orderMessage.style.display = 'block';
             orderMessage.style.opacity = '1';
             setTimeout(() => {
                 orderMessage.style.opacity = '0';
-                setTimeout(() => { orderMessage.style.display = 'none'; }, 500);
-            }, 3000);
+                setTimeout(() => {
+                    orderMessage.style.display = 'none';
+                }, 500);
+            }, 4000);
         }
 
         function renderCart() {
@@ -852,26 +866,14 @@
             const email = emailInput.value.trim();
             const pickupDate = pickupDateInput.value;
 
-            if (!pickupDate) {
-                showMessage('Kies een geldige ophaaldatum.');
-                return;
-            }
-
             const selectedDate = new Date(pickupDate);
-            const year = selectedDate.getFullYear();
-
-            if (year > 2100) {
-                showMessage('Ongeldig jaar. Kies een realistische datum.');
-                return;
-            }
-
             const today = new Date();
             today.setHours(0,0,0,0);
             const minDate = new Date();
             minDate.setDate(today.getDate() + 7);
 
-            if (selectedDate < minDate) {
-                showMessage('Ophaaldatum moet minstens 1 week van tevoren zijn. Kies een andere datum.');
+            if (selectedDate < minDate || selectedDate.getFullYear() > 2100) {
+                showOrderMessage('De ophaaldatum moet minstens 1 week van tevoren zijn en een geldig jaar bevatten.');
                 return;
             }
 
@@ -900,7 +902,7 @@
                 });
 
                 if (response.ok) {
-                    showMessage('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
+                    showOrderMessage('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
                     cart = [];
                     renderCart();
                     checkoutOverlay.classList.remove('active');
@@ -909,11 +911,11 @@
                     pickupDateInput.value = '';
                 } else {
                     console.error('SheetDB response niet ok', response.status, await response.text());
-                    throw new Error('Er is een fout opgetreden bij het verzenden van de bestelling.');
+                    showOrderMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
                 }
             } catch (error) {
                 console.error('Fout bij verzenden bestelling:', error);
-                showMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
+                showOrderMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
             }
         });
 
