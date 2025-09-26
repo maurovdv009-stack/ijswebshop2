@@ -507,7 +507,7 @@
         .checkout-form button:hover {
             background-color: var(--hover-blue);
         }
-
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .top-header {
@@ -611,6 +611,23 @@
         </div>
     </div>
 
+    <!-- Fade-in/fade-out bestelmelding -->
+    <div id="orderMessage" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        font-weight: 600;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        z-index: 300;
+    ">Bestelling succesvol geplaatst!</div>
+
     <script>
         // --- Config: SheetDB endpoints ---
         const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
@@ -635,6 +652,8 @@
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const pickupDateInput = document.getElementById('pickupDate');
+
+        const orderMessage = document.getElementById('orderMessage');
 
         let cart = [];
 
@@ -760,13 +779,11 @@
                 .then(data => {
                     productGrid.innerHTML = ''; // leegmaken
                     data.forEach(p => {
-                        // Bescherm tegen lege/unknown waarden en controleer zichtbaar
                         const visible = (p.zichtbaar || '').toString().toLowerCase();
                         if (visible === 'ja' || visible === 'true' || p.zichtbaar === undefined) {
                             createProductCard(p);
                         }
                     });
-                    // als er geen producten zichtbaar zijn
                     if (productGrid.children.length === 0) {
                         productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Geen producten beschikbaar.</p>';
                     }
@@ -785,7 +802,7 @@
             }
         });
 
-        // Zoekfunctie (werkt op dynamische kaarten)
+        // Zoekfunctie
         searchInput.addEventListener('keyup', (event) => {
             const searchTerm = event.target.value.toLowerCase();
             document.querySelectorAll('.product-card').forEach(card => {
@@ -872,7 +889,18 @@
                 });
 
                 if (response.ok) {
-                    alert('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
+                    // --- Fade-in/fade-out melding ---
+                    orderMessage.textContent = 'Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.';
+                    orderMessage.style.display = 'block';
+                    setTimeout(() => { orderMessage.style.opacity = 1; }, 10); // fade-in
+
+                    setTimeout(() => {
+                        orderMessage.style.opacity = 0; // fade-out
+                        setTimeout(() => {
+                            orderMessage.style.display = 'none';
+                        }, 500);
+                    }, 4000);
+
                     cart = [];
                     renderCart();
                     checkoutOverlay.classList.remove('active');
@@ -880,7 +908,7 @@
                     emailInput.value = '';
                     pickupDateInput.value = '';
                 } else {
-                    console.error('SaheetDB response niet ok', response.status, await response.text());
+                    console.error('SheetDB response niet ok', response.status, await response.text());
                     throw new Error('Er is een fout opgetreden bij het verzenden van de bestelling.');
                 }
             } catch (error) {
