@@ -1,223 +1,202 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IJssalon — Online</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IJssalon — Online</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-    :root {
-      --dark-background: #1a1a1a;
-      --card-background: #2a2a2a;
-      --text-color: #f0f0f0;
-      --accent-blue: #007bff;
-      --hover-blue: #0056b3;
-      --border-color: #444;
-      --header-height: 70px;
-    }
+        :root {
+            --dark-background: #1a1a1a;
+            --card-background: #2a2a2a;
+            --text-color: #f0f0f0;
+            --accent-blue: #007bff;
+            --hover-blue: #0056b3;
+            --border-color: #444;
+            --header-height: 70px;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--dark-background);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-background);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
 
-    /* Header */
-    .top-header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 20px; height: var(--header-height);
-      background-color: #242424; border-bottom: 1px solid var(--border-color);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .logo { display: flex; align-items: center; color: var(--text-color); text-decoration: none; font-size: 1.5rem; font-weight: 600; }
-    .logo .icon { background: var(--text-color); color: var(--dark-background); width: 30px; height: 30px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px; }
-    .search-bar { flex-grow: 1; margin: 0 30px; max-width: 500px; }
-    .search-bar input { width: 100%; padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 8px; background: #333; color: var(--text-color); }
-    .cart-button { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; position: relative; font-weight: 600; }
-    .cart-button .item-count { position: absolute; top: -8px; right: -8px; background: red; color: white; border-radius: 50%; padding: 3px 8px; font-size: 0.75rem; }
+        /* --- bestaande CSS blijft hetzelfde --- */
 
-    /* Hero */
-    .hero-section { padding: 50px 20px; max-width: 1200px; margin: auto; }
-    .hero-section h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
-    .hero-section p { font-size: 1.2rem; color: #aaa; margin-bottom: 30px; }
-    .view-cart-button { background: var(--accent-blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        /* Bedankt Overlay */
+        .thankyou-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 300;
+        }
 
-    /* Producten */
-    .product-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-    .product-card { background: var(--card-background); border-radius: 12px; text-align: center; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-    .product-card img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid var(--accent-blue); }
-    .product-info h3 { margin-bottom: 5px; }
-    .product-info p { margin-bottom: 10px; color: #bbb; }
-    .quantity-selector { display: flex; justify-content: center; margin-bottom: 10px; }
-    .quantity-selector button { background: var(--accent-blue); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; }
-    .quantity-selector input { width: 50px; text-align: center; margin: 0 5px; }
+        .thankyou-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-    .add-to-cart-btn { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .thankyou-modal {
+            background-color: #242424;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            text-align: center;
+        }
 
-    /* Cart */
-    .cart-sidebar { position: fixed; top: 0; right: -400px; width: 380px; height: 100%; background: #242424; padding: 20px; transition: right 0.4s ease; display: flex; flex-direction: column; z-index: 101; }
-    .cart-sidebar.open { right: 0; }
-    .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    #cart-items-list { list-style: none; flex-grow: 1; overflow-y: auto; margin-bottom: 20px; }
-    .cart-total { text-align: right; font-size: 1.4rem; margin-bottom: 20px; }
+        .thankyou-modal h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--accent-blue);
+        }
 
-    /* Checkout */
-    .checkout-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 200; }
-    .checkout-modal { background: var(--card-background); padding: 20px; border-radius: 10px; max-width: 400px; width: 100%; }
-    .checkout-modal h2 { margin-bottom: 15px; }
-    .checkout-form { display: flex; flex-direction: column; }
-    .checkout-form input { margin-bottom: 10px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: #333; color: var(--text-color); }
-    .checkout-form button { background: var(--accent-blue); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .thankyou-modal p {
+            font-size: 1.1rem;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
 
-    /* ✅ Bedankt-popup */
-    .thankyou-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 999; }
-    .thankyou-modal { background: var(--card-background); padding: 30px; border-radius: 12px; text-align: center; max-width: 400px; color: var(--text-color); }
-    .thankyou-modal h2 { margin-bottom: 10px; }
-    .thankyou-modal button { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-  </style>
+        .thankyou-modal .close-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .thankyou-modal .close-btn:hover {
+            background-color: var(--hover-blue);
+        }
+    </style>
 </head>
 <body>
-  <header class="top-header">
-    <a href="#" class="logo"><div class="icon">IJ</div>IJssalon — Online</a>
-    <div class="search-bar"><input type="text" id="searchInput" placeholder="Zoek smaak..."></div>
-    <button class="cart-button" id="toggleCartButton">Winkelwagen <span class="item-count" id="cartItemCount">0</span></button>
-  </header>
 
-  <main>
-    <section class="hero-section">
-      <h1>Beste ijs, per liter</h1>
-      <p>Bestel eenvoudig je favoriete smaken online.</p>
-      <button class="view-cart-button" id="heroViewCartButton">Bekijk winkelwagen</button>
-    </section>
-    <section class="product-container"><div class="product-grid" id="productGrid"></div></section>
-  </main>
+    <!-- ... jouw header, hero section en winkelwagen sidebar code blijft identiek ... -->
 
-  <!-- Cart -->
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <h2>Winkelwagen</h2>
-      <button id="closeCartButton">&times;</button>
+    <div class="checkout-overlay" id="checkoutOverlay">
+        <div class="checkout-modal">
+            <button class="close-btn" id="closeCheckoutBtn">&times;</button>
+            <h2>Bestelling afronden</h2>
+            <form id="checkoutForm" class="checkout-form">
+                <div class="form-group">
+                    <label for="name">Naam</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="pickupDate">Gewenste ophaaldatum</label>
+                    <input type="date" id="pickupDate" required>
+                </div>
+                <button type="submit">Bestelling plaatsen</button>
+            </form>
+        </div>
     </div>
-    <ul id="cart-items-list"><li>Je winkelwagen is leeg.</li></ul>
-    <div class="cart-total">Totaal: <span id="cart-total-price">€0,00</span></div>
-    <button class="checkout-btn" id="checkoutBtn">Afrekenen</button>
-  </div>
 
-  <!-- Checkout -->
-  <div class="checkout-overlay" id="checkoutOverlay">
-    <div class="checkout-modal">
-      <h2>Bestelling afronden</h2>
-      <form id="checkoutForm" class="checkout-form">
-        <input type="text" id="name" placeholder="Naam" required>
-        <input type="email" id="email" placeholder="E-mail" required>
-        <input type="date" id="pickupDate" required>
-        <button type="submit">Bestelling plaatsen</button>
-      </form>
+    <!-- Nieuwe custom bedankt overlay -->
+    <div class="thankyou-overlay" id="thankyouOverlay">
+        <div class="thankyou-modal">
+            <h2>Bedankt voor je bestelling!</h2>
+            <p>We hebben je bestelling goed ontvangen.</p>
+            <button class="close-btn" id="closeThankyouBtn">Sluiten</button>
+        </div>
     </div>
-  </div>
 
-  <!-- ✅ Bedankt -->
-  <div class="thankyou-overlay" id="thankyouOverlay">
-    <div class="thankyou-modal">
-      <h2>🎉 Bedankt!</h2>
-      <p>We hebben je bestelling goed ontvangen.</p>
-      <button id="thankyouCloseBtn">Sluiten</button>
-    </div>
-  </div>
+    <script>
+        // --- jouw bestaande JS blijft hetzelfde tot aan checkoutForm.addEventListener ---
 
-  <script>
-  const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
-  const productGrid = document.getElementById("productGrid");
-  const cartSidebar = document.getElementById("cartSidebar");
-  const toggleCartButton = document.getElementById("toggleCartButton");
-  const closeCartButton = document.getElementById("closeCartButton");
-  const heroViewCartButton = document.getElementById("heroViewCartButton");
-  const checkoutBtn = document.getElementById("checkoutBtn");
-  const checkoutOverlay = document.getElementById("checkoutOverlay");
-  const checkoutForm = document.getElementById("checkoutForm");
-  const thankyouOverlay = document.getElementById("thankyouOverlay");
-  const thankyouCloseBtn = document.getElementById("thankyouCloseBtn");
+        const thankyouOverlay = document.getElementById('thankyouOverlay');
+        const closeThankyouBtn = document.getElementById('closeThankyouBtn');
 
-  let cart = [];
+        checkoutForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-  // ✅ Producten laden
-  fetch(SHEETDB_PRODUCTS_URL)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(p => {
-        if (p.zichtbaar.toLowerCase() === "ja") {
-          const card = document.createElement("div");
-          card.classList.add("product-card");
-          card.innerHTML = `
-            <img src="${p.afbeelding_url}" alt="${p.naam}">
-            <div class="product-info">
-              <h3>${p.naam}</h3>
-              <p>€${parseFloat(p.prijs).toFixed(2)}/L</p>
-              <div class="quantity-selector">
-                <button class="minus">-</button>
-                <input type="number" value="1" min="1" class="quantity-input">
-                <button class="plus">+</button>
-              </div>
-              <button class="add-to-cart-btn">Voeg toe</button>
-            </div>`;
-          productGrid.appendChild(card);
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const pickupDate = pickupDateInput.value;
 
-          const minusBtn = card.querySelector(".minus");
-          const plusBtn = card.querySelector(".plus");
-          const qtyInput = card.querySelector(".quantity-input");
-          const addBtn = card.querySelector(".add-to-cart-btn");
+            const selectedDate = new Date(pickupDate);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const minDate = new Date();
+            minDate.setDate(today.getDate() + 7);
 
-          minusBtn.addEventListener("click", () => {
-            if (qtyInput.value > 1) qtyInput.value--;
-          });
-          plusBtn.addEventListener("click", () => qtyInput.value++);
-          addBtn.addEventListener("click", () => {
-            addToCart(p.naam, parseFloat(p.prijs), qtyInput.value, p.afbeelding_url);
-          });
-        }
-      });
-    });
+            if (selectedDate < minDate) {
+                alert('De ophaaldatum moet minstens 1 week van tevoren zijn. Kies een andere datum.');
+                return;
+            }
 
-  function addToCart(name, price, qty, img) {
-    const existing = cart.find(item => item.name === name);
-    if (existing) existing.qty += parseInt(qty);
-    else cart.push({ name, price, qty: parseInt(qty), img });
-    updateCart();
-  }
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const orderItems = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
+            const orderID = generateUniqueId();
 
-  function updateCart() {
-    const list = document.getElementById("cart-items-list");
-    list.innerHTML = "";
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price * item.qty;
-      const li = document.createElement("li");
-      li.innerHTML = `${item.name} x${item.qty} - €${(item.price*item.qty).toFixed(2)}`;
-      list.appendChild(li);
-    });
-    if (cart.length === 0) list.innerHTML = "<li>Je winkelwagen is leeg.</li>";
-    document.getElementById("cart-total-price").textContent = "€" + total.toFixed(2);
-    document.getElementById("cartItemCount").textContent = cart.reduce((a,i)=>a+i.qty,0);
-  }
+            try {
+                const response = await fetch(SHEETDB_ORDERS_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            ID: orderID,
+                            Naam: name,
+                            Email: email,
+                            Ophaaldatum: pickupDate,
+                            Items: orderItems,
+                            Totaalprijs: total.toFixed(2)
+                        }
+                    })
+                });
 
-  toggleCartButton.addEventListener("click", () => cartSidebar.classList.toggle("open"));
-  closeCartButton.addEventListener("click", () => cartSidebar.classList.remove("open"));
-  heroViewCartButton.addEventListener("click", () => cartSidebar.classList.add("open"));
+                if (response.ok) {
+                    // In plaats van alert tonen we de custom overlay
+                    cart = [];
+                    renderCart();
+                    checkoutOverlay.classList.remove('active');
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    pickupDateInput.value = '';
+                    thankyouOverlay.classList.add('active');
+                } else {
+                    throw new Error('Er is een fout opgetreden bij het verzenden van de bestelling.');
+                }
+            } catch (error) {
+                console.error('Fout bij verzenden bestelling:', error);
+                alert('Er is een fout opgetreden. Probeer het later opnieuw.');
+            }
+        });
 
-  checkoutBtn.addEventListener("click", () => checkoutOverlay.style.display = "flex");
-  checkoutForm.addEventListener("submit", e => {
-    e.preventDefault();
-    checkoutOverlay.style.display = "none";
-    cart = [];
-    updateCart();
-    thankyouOverlay.style.display = "flex";
-  });
-  thankyouCloseBtn.addEventListener("click", () => thankyouOverlay.style.display = "none");
-  </script>
+        closeThankyouBtn.addEventListener('click', () => {
+            thankyouOverlay.classList.remove('active');
+        });
+    </script>
 </body>
 </html>
