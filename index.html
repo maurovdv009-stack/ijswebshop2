@@ -508,6 +508,26 @@
             background-color: var(--hover-blue);
         }
         
+        /* Fade-in/fade-out melding stijl (centrum bovenaan) */
+        .order-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-weight: 600;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 300;
+            text-align: center;
+            max-width: 90%;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .top-header {
@@ -611,29 +631,13 @@
         </div>
     </div>
 
-    <!-- Fade-in/fade-out bestelmelding -->
-    <div id="orderMessage" style="
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #007bff;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        font-weight: 600;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        z-index: 300;
-    ">Bestelling succesvol geplaatst!</div>
+    <!-- Melding -->
+    <div class="order-message" id="orderMessage"></div>
 
     <script>
-        // --- Config: SheetDB endpoints ---
         const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
         const SHEETDB_ORDERS_URL = "https://sheetdb.io/api/v1/pnz12bqkys5sc";
 
-        // --- Element references ---
         const productGrid = document.getElementById('productGrid');
         const cartItemsList = document.getElementById('cart-items-list');
         const cartTotalPrice = document.getElementById('cart-total-price');
@@ -657,12 +661,10 @@
 
         let cart = [];
 
-        // Unieke ID generator
         function generateUniqueId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
         }
 
-        // Render winkelwagen
         function renderCart() {
             cartItemsList.innerHTML = '';
             let total = 0;
@@ -700,13 +702,11 @@
             cartItemCount.textContent = totalItems;
         }
 
-        // Verwijder item op naam
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             renderCart();
         }
 
-        // Voeg productkaart toe aan grid en koppel events
         function createProductCard(product) {
             const card = document.createElement('div');
             card.classList.add('product-card');
@@ -728,7 +728,6 @@
                 </div>
             `;
 
-            // koppel events voor deze kaart
             const minusButton = card.querySelector('.quantity-minus');
             const plusButton = card.querySelector('.quantity-plus');
             const quantityInput = card.querySelector('.quantity-input');
@@ -768,7 +767,6 @@
             productGrid.appendChild(card);
         }
 
-        // Laad producten uit SheetDB en maak kaarten
         function loadProducts() {
             productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Producten laden…</p>';
             fetch(SHEETDB_PRODUCTS_URL)
@@ -777,7 +775,7 @@
                     return res.json();
                 })
                 .then(data => {
-                    productGrid.innerHTML = ''; // leegmaken
+                    productGrid.innerHTML = '';
                     data.forEach(p => {
                         const visible = (p.zichtbaar || '').toString().toLowerCase();
                         if (visible === 'ja' || visible === 'true' || p.zichtbaar === undefined) {
@@ -794,7 +792,6 @@
                 });
         }
 
-        // Eventdelegatie voor verwijderen in winkelwagen
         cartItemsList.addEventListener('click', (event) => {
             if (event.target.classList.contains('remove-item-btn')) {
                 const name = event.target.dataset.name;
@@ -802,7 +799,6 @@
             }
         });
 
-        // Zoekfunctie
         searchInput.addEventListener('keyup', (event) => {
             const searchTerm = event.target.value.toLowerCase();
             document.querySelectorAll('.product-card').forEach(card => {
@@ -815,7 +811,6 @@
             });
         });
 
-        // Winkelwagen open/close
         toggleCartButton.addEventListener('click', () => {
             cartSidebar.classList.toggle('open');
         });
@@ -833,7 +828,6 @@
             renderCart();
         });
 
-        // Checkout overlay
         checkoutBtn.addEventListener('click', () => {
             if (cart.length > 0) {
                 cartSidebar.classList.remove('open');
@@ -845,7 +839,16 @@
             checkoutOverlay.classList.remove('active');
         });
 
-        // Submit checkout
+        function showMessage(message) {
+            orderMessage.textContent = message;
+            orderMessage.style.display = 'block';
+            setTimeout(() => { orderMessage.style.opacity = 1; }, 10);
+            setTimeout(() => {
+                orderMessage.style.opacity = 0;
+                setTimeout(() => { orderMessage.style.display = 'none'; }, 500);
+            }, 4000);
+        }
+
         checkoutForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
@@ -860,7 +863,7 @@
             minDate.setDate(today.getDate() + 7);
 
             if (selectedDate < minDate) {
-                alert('De ophaaldatum moet minstens 1 week van tevoren zijn. Kies een andere datum.');
+                showMessage('Ophaaldatum moet minstens 1 week van tevoren zijn. Kies een andere datum.');
                 return;
             }
 
@@ -889,18 +892,7 @@
                 });
 
                 if (response.ok) {
-                    // --- Fade-in/fade-out melding ---
-                    orderMessage.textContent = 'Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.';
-                    orderMessage.style.display = 'block';
-                    setTimeout(() => { orderMessage.style.opacity = 1; }, 10); // fade-in
-
-                    setTimeout(() => {
-                        orderMessage.style.opacity = 0; // fade-out
-                        setTimeout(() => {
-                            orderMessage.style.display = 'none';
-                        }, 500);
-                    }, 4000);
-
+                    showMessage('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
                     cart = [];
                     renderCart();
                     checkoutOverlay.classList.remove('active');
@@ -913,11 +905,10 @@
                 }
             } catch (error) {
                 console.error('Fout bij verzenden bestelling:', error);
-                alert('Er is een fout opgetreden. Probeer het later opnieuw.');
+                showMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
             }
         });
 
-        // Initialisatie
         renderCart();
         loadProducts();
     </script>
