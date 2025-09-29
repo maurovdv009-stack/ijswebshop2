@@ -464,5 +464,53 @@
             });
         });
     </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function() {
+      emailjs.init("hTZLCoqZaG6BB1L9d"); // Jouw Public Key
+   })();
+</script>
+                if (response.ok) {
+                // Bestelling succesvol opgeslagen in SheetDB
+
+                // Voorbereiding voor EmailJS
+                const cartItemsForEmail = cart.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: (item.price * item.quantity).toFixed(2).replace('.', ','), // Totale prijs voor dit item
+                    img: item.img
+                }));
+
+                const templateParams = {
+                    name: name,
+                    email: email,
+                    order_id: orderID,
+                    total_price: total.toFixed(2).replace('.', ','),
+                    pickup_date: new Date(pickupDate).toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                    cart_items: cartItemsForEmail // Array van bestelde items
+                };
+
+                try {
+                    // Stuur de e-mail via EmailJS
+                    await emailjs.send("service_8hdievx", "template_59ts98s", templateParams); // Jouw Service ID en Template ID
+                    showOrderMessage('Bedankt voor je bestelling! Je ontvangt zo een bevestigingsmail.');
+                } catch (emailError) {
+                    console.error('Fout bij verzenden van bevestigingsmail via EmailJS:', emailError);
+                    showOrderMessage('Bestelling succesvol, maar er is een probleem met het verzenden van de bevestigingsmail.');
+                }
+
+                // Reset de winkelwagen en formulier
+                cart = [];
+                renderCart();
+                checkoutOverlay.classList.remove('active');
+                nameInput.value = '';
+                emailInput.value = '';
+                pickupDateInput.value = '';
+
+            } else {
+                console.error('SheetDB response niet ok', response.status, await response.text());
+                showOrderMessage('Er is een fout opgetreden bij het plaatsen van de bestelling. Probeer het later opnieuw.');
+            }
 </body>
 </html>
+
