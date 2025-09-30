@@ -905,45 +905,52 @@
                 });
 
                 if (sheetDBResponse.ok) {
-                    // STAP 2: Als SheetDB succesvol was, verstuur dan de bevestigingsmail via Google Apps Script
-                    const emailData = {
-                        orderID: orderID,
-                        naam: name,
-                        email: email,
-                        ophaaldatum: pickupDate,
-                        items: orderItemsForEmail,
-                        totaalprijs: total.toFixed(2)
+                    console.log('SheetDB bestelling succesvol opgeslagen');
+                    
+                    // STAP 2: Probeer de bevestigingsmail te versturen via Google Apps Script
+try {
+const emailData = {
+orderID: orderID,
+naam: name,
+email: email,
+ophaaldatum: pickupDate,
+items: orderItemsForEmail,
+totaalprijs: total.toFixed(2)
 };
-                const appsScriptResponse = await fetch(GOOGLE_APPS_SCRIPT_EMAIL_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(emailData)
-                });
+                    console.log('Versturen email data naar Apps Script:', emailData);
 
-                const appsScriptResult = await appsScriptResponse.json();
+                    const appsScriptResponse = await fetch(GOOGLE_APPS_SCRIPT_EMAIL_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Belangrijk voor Google Apps Script
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(emailData)
+                    });
 
-                if (appsScriptResult.success) {
-                    showOrderMessage('Bedankt voor je bestelling! Je hebt een bevestigingsmail ontvangen.');
-                } else {
-                    console.warn('Waarschuwing: E-mail verzenden via Apps Script mislukt:', appsScriptResult.message);
-                    showOrderMessage('Bestelling geplaatst, maar bevestigingsmail kon niet worden verstuurd. Neem contact op als je geen mail ontvangt.');
+                    // Met 'no-cors' mode krijgen we geen response terug, dus we gaan ervan uit dat het gelukt is
+                    console.log('Email verzonden (no-cors mode)');
+                    showOrderMessage('Bedankt voor je bestelling! Je ontvangt binnenkort een bevestigingsmail.');
+                    
+                } catch (emailError) {
+                    console.warn('Waarschuwing: E-mail verzenden mislukt:', emailError);
+                    showOrderMessage('Bestelling geplaatst! Als je geen bevestigingsmail ontvangt, neem dan contact met ons op.');
                 }
 
-                // Reset de winkelwagen en UI ongeacht of de e-mail is verstuurd
+                // Reset de winkelwagen en UI
                 cart = [];
                 renderCart();
                 checkoutOverlay.classList.remove('active');
                 nameInput.value = '';
                 emailInput.value = '';
                 pickupDateInput.value = '';
+
             } else {
                 console.error('SheetDB response niet ok', sheetDBResponse.status, await sheetDBResponse.text());
                 showOrderMessage('Er is een fout opgetreden bij het plaatsen van de bestelling. Probeer het later opnieuw.');
             }
         } catch (error) {
-            console.error('Fout bij verzenden bestelling of e-mail:', error);
+            console.error('Fout bij verzenden bestelling:', error);
             showOrderMessage('Er is een onverwachte fout opgetreden. Probeer het later opnieuw.');
         }
     });
