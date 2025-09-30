@@ -645,7 +645,6 @@
         // --- Config: SheetDB endpoints ---
         const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
         const SHEETDB_ORDERS_URL = "https://sheetdb.io/api/v1/pnz12bqkys5sc";
-        const GOOGLE_APPS_SCRIPT_EMAIL_URL = 'https://script.google.com/macros/s/AKfycbymDauQFys08U-DhnEbK5kLQ2n6761NJYYoKql3sk7dkOb51Ur89vCDaE8vOcvyFWGE/exec';
 
         // --- Element references ---
         const productGrid = document.getElementById('productGrid');
@@ -880,13 +879,12 @@
             }
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const orderItems = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
+
             const orderID = generateUniqueId();
-            const orderItemsForSheetDB = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
-            const orderItemsForEmail = JSON.stringify(cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })));
 
             try {
-                // STAP 1: Stuur de bestelling naar SheetDB
-                const sheetDBResponse = await fetch(SHEETDB_ORDERS_URL, {
+                const response = await fetch(SHEETDB_ORDERS_URL, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -898,65 +896,32 @@
                             Naam: name,
                             Email: email,
                             Ophaaldatum: pickupDate,
-                            Items: orderItemsForSheetDB,
+                            Items: orderItems,
                             Totaalprijs: total.toFixed(2)
                         }
                     })
                 });
 
-                if (sheetDBResponse.ok) {
-                    console.log('SheetDB bestelling succesvol opgeslagen');
-                    
-                    // STAP 2: Probeer de bevestigingsmail te versturen via Google Apps Script
-try {
-const emailData = {
-orderID: orderID,
-naam: name,
-email: email,
-ophaaldatum: pickupDate,
-items: orderItemsForEmail,
-totaalprijs: total.toFixed(2)
-};
-                    console.log('Versturen email data naar Apps Script:', emailData);
-
-                    const appsScriptResponse = await fetch(GOOGLE_APPS_SCRIPT_EMAIL_URL, {
-                        method: 'POST',
-                        mode: 'no-cors', // Belangrijk voor Google Apps Script
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(emailData)
-                    });
-
-                    // Met 'no-cors' mode krijgen we geen response terug, dus we gaan ervan uit dat het gelukt is
-                    console.log('Email verzonden (no-cors mode)');
-                    showOrderMessage('Bedankt voor je bestelling! Je ontvangt binnenkort een bevestigingsmail.');
-                    
-                } catch (emailError) {
-                    console.warn('Waarschuwing: E-mail verzenden mislukt:', emailError);
-                    showOrderMessage('Bestelling geplaatst! Als je geen bevestigingsmail ontvangt, neem dan contact met ons op.');
+                if (response.ok) {
+                    showOrderMessage('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
+                    cart = [];
+                    renderCart();
+                    checkoutOverlay.classList.remove('active');
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    pickupDateInput.value = '';
+                } else {
+                    console.error('SheetDB response niet ok', response.status, await response.text());
+                    showOrderMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
                 }
-
-                // Reset de winkelwagen en UI
-                cart = [];
-                renderCart();
-                checkoutOverlay.classList.remove('active');
-                nameInput.value = '';
-                emailInput.value = '';
-                pickupDateInput.value = '';
-
-            } else {
-                console.error('SheetDB response niet ok', sheetDBResponse.status, await sheetDBResponse.text());
-                showOrderMessage('Er is een fout opgetreden bij het plaatsen van de bestelling. Probeer het later opnieuw.');
+            } catch (error) {
+                console.error('Fout bij verzenden bestelling:', error);
+                showOrderMessage('Er is een fout opgetreden. Probeer het later opnieuw.');
             }
-        } catch (error) {
-            console.error('Fout bij verzenden bestelling:', error);
-            showOrderMessage('Er is een onverwachte fout opgetreden. Probeer het later opnieuw.');
-        }
-    });
+        });
 
-    renderCart();
-    loadProducts();
-</script>
+        renderCart();
+        loadProducts();
+    </script>
 </body>
 </html>
