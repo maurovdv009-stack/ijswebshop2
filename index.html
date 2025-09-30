@@ -641,23 +641,26 @@
 
     <div class="order-message" id="orderMessage"></div>
 
+    <!-- ✅ EMAILJS script toevoegen -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
+        // ✅ Init EmailJS
+        (function(){
+            emailjs.init("hTZLCoqZaG6BB1L9d"); // Jouw Public Key
+        })();
+
         // --- Config: SheetDB endpoints ---
         const SHEETDB_PRODUCTS_URL = "https://sheetdb.io/api/v1/srftivat1c9m5";
         const SHEETDB_ORDERS_URL = "https://sheetdb.io/api/v1/pnz12bqkys5sc";
 
-        // --- Element references ---
-        const productGrid = document.getElementById('productGrid');
-        const cartItemsList = document.getElementById('cart-items-list');
-        const cartTotalPrice = document.getElementById('cart-total-price');
         const cartItemCount = document.getElementById('cartItemCount');
+        const cartSidebar = document.getElementById('cartSidebar');
         const toggleCartButton = document.getElementById('toggleCartButton');
         const heroViewCartButton = document.getElementById('heroViewCartButton');
-        const cartSidebar = document.getElementById('cartSidebar');
         const closeCartButton = document.getElementById('closeCartButton');
-        const emptyCartButton = document.querySelector('.empty-cart-btn');
-        const searchInput = document.getElementById('searchInput');
-
+        const emptyCartBtn = document.querySelector('.empty-cart-btn');
+        const cartItemsList = document.getElementById('cart-items-list');
+        const cartTotalPrice = document.getElementById('cart-total-price');
         const checkoutBtn = document.getElementById('checkoutBtn');
         const checkoutOverlay = document.getElementById('checkoutOverlay');
         const closeCheckoutBtn = document.getElementById('closeCheckoutBtn');
@@ -665,14 +668,36 @@
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const pickupDateInput = document.getElementById('pickupDate');
-
         const orderMessage = document.getElementById('orderMessage');
+        const searchInput = document.getElementById('searchInput');
+        const productGrid = document.getElementById('productGrid');
 
         let cart = [];
 
-        function generateUniqueId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        function toggleCart(open) {
+            cartSidebar.classList.toggle('open', open);
         }
+
+        toggleCartButton.addEventListener('click', () => toggleCart(true));
+        heroViewCartButton.addEventListener('click', () => toggleCart(true));
+        closeCartButton.addEventListener('click', () => toggleCart(false));
+
+        emptyCartBtn.addEventListener('click', () => {
+            cart = [];
+            renderCart();
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                showOrderMessage('Je winkelwagen is leeg.');
+                return;
+            }
+            checkoutOverlay.classList.add('active');
+        });
+
+        closeCheckoutBtn.addEventListener('click', () => {
+            checkoutOverlay.classList.remove('active');
+        });
 
         function showOrderMessage(message) {
             orderMessage.textContent = message;
@@ -683,181 +708,121 @@
                 setTimeout(() => {
                     orderMessage.style.display = 'none';
                 }, 500);
-            }, 4000);
+            }, 3000);
         }
 
         function renderCart() {
             cartItemsList.innerHTML = '';
-            let total = 0;
-            let totalItems = 0;
-
             if (cart.length === 0) {
-                const li = document.createElement('li');
-                li.textContent = 'Je winkelwagen is leeg.';
-                li.classList.add('empty-cart-message');
-                cartItemsList.appendChild(li);
-                checkoutBtn.disabled = true;
-                checkoutBtn.style.opacity = '0.5';
-                checkoutBtn.style.cursor = 'not-allowed';
+                cartItemsList.innerHTML = '<li class="empty-cart-message">Je winkelwagen is leeg.</li>';
             } else {
-                cart.forEach(item => {
+                cart.forEach((item, index) => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
                         <div class="cart-item-details">
                             <span class="cart-item-name">${item.name}</span>
-                            <span class="cart-item-price">${item.quantity} L - €${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+                            <span class="cart-item-price">${item.quantity} x €${item.price.toFixed(2)}</span>
                         </div>
-                        <button class="remove-item-btn" data-name="${item.name}">Verwijder</button>
+                        <button class="remove-item-btn" data-index="${index}">Verwijder</button>
                     `;
                     cartItemsList.appendChild(li);
-                    total += item.price * item.quantity;
-                    totalItems += item.quantity;
                 });
-                checkoutBtn.disabled = false;
-                checkoutBtn.style.opacity = '1';
-                checkoutBtn.style.cursor = 'pointer';
             }
+            cartItemCount.textContent = cart.length;
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotalPrice.textContent = `€${total.toFixed(2)}`;
 
-            cartTotalPrice.textContent = `€${total.toFixed(2).replace('.', ',')}`;
-            cartItemCount.textContent = totalItems;
+            document.querySelectorAll('.remove-item-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = btn.getAttribute('data-index');
+                    cart.splice(index, 1);
+                    renderCart();
+                });
+            });
         }
 
-        function removeFromCart(productName) {
-            cart = cart.filter(item => item.name !== productName);
-            renderCart();
+        function generateUniqueId() {
+            return 'order-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
         }
 
-        function createProductCard(product) {
-            const card = document.createElement('div');
-            card.classList.add('product-card');
-            card.dataset.name = product.naam;
-            card.dataset.price = product.prijs;
-            card.dataset.img = product.afbeelding_url || '';
+        async function loadProducts() {
+            try {
+                const response = await fetch(SHEETDB_PRODUCTS_URL);
+                const products = await response.json();
 
-            card.innerHTML = `
-                <img src="${product.afbeelding_url || ''}" alt="${product.naam} ijs">
-                <div class="product-info">
-                    <h3>${product.naam}</h3>
-                    <p>€${parseFloat(product.prijs).toFixed(2)}/L</p>
-                    <div class="quantity-selector">
-                        <button class="quantity-minus">-</button>
-                        <input type="number" value="1" min="1" class="quantity-input">
-                        <button class="quantity-plus">+</button>
-                    </div>
-                    <button class="add-to-cart-btn">Voeg toe</button>
-                </div>
-            `;
+                productGrid.innerHTML = '';
 
-            const minusButton = card.querySelector('.quantity-minus');
-            const plusButton = card.querySelector('.quantity-plus');
-            const quantityInput = card.querySelector('.quantity-input');
-            const addToCartButton = card.querySelector('.add-to-cart-btn');
+                products.forEach(product => {
+                    const card = document.createElement('div');
+                    card.classList.add('product-card');
+                    card.innerHTML = `
+                        <img src="${product.image}" alt="${product.naam}">
+                        <div class="product-info">
+                            <h3>${product.naam}</h3>
+                            <p>€${parseFloat(product.prijs).toFixed(2)} / liter</p>
+                            <div class="quantity-selector">
+                                <button class="decrease-btn">-</button>
+                                <input type="number" min="1" value="1" class="quantity-input">
+                                <button class="increase-btn">+</button>
+                            </div>
+                            <button class="add-to-cart-btn">Toevoegen</button>
+                        </div>
+                    `;
+                    productGrid.appendChild(card);
 
-            minusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value) || 1;
-                if (currentValue > 1) quantityInput.value = currentValue - 1;
-            });
+                    const decreaseBtn = card.querySelector('.decrease-btn');
+                    const increaseBtn = card.querySelector('.increase-btn');
+                    const quantityInput = card.querySelector('.quantity-input');
+                    const addToCartBtn = card.querySelector('.add-to-cart-btn');
 
-            plusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value) || 1;
-                quantityInput.value = currentValue + 1;
-            });
-
-            addToCartButton.addEventListener('click', () => {
-                const quantity = Math.max(1, parseInt(quantityInput.value) || 1);
-                const productName = card.dataset.name;
-                const productPrice = parseFloat(card.dataset.price) || 0;
-                const productImg = card.dataset.img || '';
-
-                const existingItem = cart.find(i => i.name === productName);
-                if (existingItem) {
-                    existingItem.quantity += quantity;
-                } else {
-                    cart.push({
-                        name: productName,
-                        price: productPrice,
-                        quantity: quantity,
-                        img: productImg
-                    });
-                }
-                renderCart();
-                quantityInput.value = 1;
-            });
-
-            productGrid.appendChild(card);
-        }
-
-        function loadProducts() {
-            productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Producten laden…</p>';
-            fetch(SHEETDB_PRODUCTS_URL)
-                .then(res => {
-                    if (!res.ok) throw new Error('Netwerk response niet ok');
-                    return res.json();
-                })
-                .then(data => {
-                    productGrid.innerHTML = '';
-                    data.forEach(p => {
-                        const visible = (p.zichtbaar || '').toString().toLowerCase();
-                        if (visible === 'ja' || visible === 'true' || p.zichtbaar === undefined) {
-                            createProductCard(p);
+                    decreaseBtn.addEventListener('click', () => {
+                        let value = parseInt(quantityInput.value);
+                        if (value > 1) {
+                            quantityInput.value = value - 1;
                         }
                     });
-                    if (productGrid.children.length === 0) {
-                        productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Geen producten beschikbaar.</p>';
-                    }
-                })
-                .catch(err => {
-                    console.error('Fout bij laden producten:', err);
-                    productGrid.innerHTML = '<p style="color:#bbb; grid-column: 1/-1; text-align:center;">Kon producten niet laden. Controleer je SheetDB-link.</p>';
+
+                    increaseBtn.addEventListener('click', () => {
+                        let value = parseInt(quantityInput.value);
+                        quantityInput.value = value + 1;
+                    });
+
+                    addToCartBtn.addEventListener('click', () => {
+                        const quantity = parseInt(quantityInput.value);
+                        const existingItem = cart.find(item => item.name === product.naam);
+                        if (existingItem) {
+                            existingItem.quantity += quantity;
+                        } else {
+                            cart.push({
+                                name: product.naam,
+                                price: parseFloat(product.prijs),
+                                quantity: quantity,
+                                image: product.image
+                            });
+                        }
+                        renderCart();
+                        showOrderMessage(`${quantity}x ${product.naam} toegevoegd aan winkelwagen`);
+                    });
                 });
+
+            } catch (error) {
+                console.error('Fout bij laden producten:', error);
+                productGrid.innerHTML = '<p style="color: red;">Kon producten niet laden. Probeer later opnieuw.</p>';
+            }
         }
 
-        cartItemsList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('remove-item-btn')) {
-                const name = event.target.dataset.name;
-                removeFromCart(name);
-            }
-        });
-
-        searchInput.addEventListener('keyup', (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            document.querySelectorAll('.product-card').forEach(card => {
-                const productName = (card.dataset.name || '').toLowerCase();
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const productName = card.querySelector('h3').textContent.toLowerCase();
                 if (productName.includes(searchTerm)) {
                     card.classList.remove('hidden');
                 } else {
                     card.classList.add('hidden');
                 }
             });
-        });
-
-        toggleCartButton.addEventListener('click', () => {
-            cartSidebar.classList.toggle('open');
-        });
-
-        heroViewCartButton.addEventListener('click', () => {
-            cartSidebar.classList.add('open');
-        });
-
-        closeCartButton.addEventListener('click', () => {
-            cartSidebar.classList.remove('open');
-        });
-
-        emptyCartButton.addEventListener('click', () => {
-            cart = [];
-            renderCart();
-        });
-
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length > 0) {
-                cartSidebar.classList.remove('open');
-                checkoutOverlay.classList.add('active');
-            }
-        });
-
-        closeCheckoutBtn.addEventListener('click', () => {
-            checkoutOverlay.classList.remove('active');
         });
 
         checkoutForm.addEventListener('submit', async (event) => {
@@ -903,6 +868,19 @@
                 });
 
                 if (response.ok) {
+                    // ✅ EMAILJS bevestigingsmail versturen
+                    emailjs.send("service_8hdievx", "template_59ts98s", {
+                        to_name: name,
+                        to_email: email,
+                        pickup_date: pickupDate,
+                        total_price: total.toFixed(2),
+                        items: orderItems
+                    }).then(() => {
+                        console.log("✅ Bevestigingsmail verzonden via EmailJS");
+                    }).catch(err => {
+                        console.error("❌ EmailJS fout:", err);
+                    });
+
                     showOrderMessage('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');
                     cart = [];
                     renderCart();
