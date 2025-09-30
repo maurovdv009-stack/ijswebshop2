@@ -76,6 +76,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);lin
 .order-message{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:15px 25px;border-radius:8px;font-weight:600;z-index:300;opacity:0;display:none;text-align:center;max-width:90%;word-wrap:break-word;transition:.5s;}
 @media(max-width:768px){.top-header{flex-wrap:wrap;height:auto;padding:10px;}.search-bar{order:3;width:100%;margin:10px 0 0;}.logo{font-size:1.2rem;}.hero-section h1{font-size:2.2rem;}.cart-button{padding:8px 15px;font-size:.9rem;}.cart-sidebar{width:100%;right:-100%;}.cart-sidebar.open{right:0;}}
 @media(max-width:480px){.order-message{font-size:.9rem;padding:12px 20px;}}
+
 </style>
 </head>
 <body>
@@ -155,9 +156,14 @@ function createCard(p){
   c.querySelector('.quantity-plus').onclick=()=>qI.value++;
   c.querySelector('.add-to-cart-btn').onclick=()=>{
     const qty=Math.max(1,parseInt(qI.value)||1),n=c.dataset.name,p=parseFloat(c.dataset.price)||0,img=c.dataset.img||'';
-    flyToCart(c.querySelector('img'));
+    // toon melding eerst
+    showMsg(`${n} toegevoegd aan de winkelwagen`);
+    // voeg toe aan cart
     const e=cart.find(i=>i.name===n);e?e.quantity+=qty:cart.push({name:n,price:p,quantity:qty,img});
-    renderCart();qI.value=1;
+    renderCart();
+    qI.value=1;
+    // start animatie
+    flyToCart(c.querySelector('img'));
   };
   $('#productGrid').appendChild(c);
 }
@@ -169,7 +175,7 @@ $('#searchInput').addEventListener('keyup',e=>{$$('.product-card').forEach(c=>{c
 $('#toggleCartButton').onclick=$('#heroViewCartButton').onclick=()=>$('#cartSidebar').classList.add('open');
 $('#closeCartButton').onclick=()=>$('#cartSidebar').classList.remove('open');
 $('.empty-cart-btn').onclick=()=>{cart=[];renderCart();};
-$('#checkoutBtn').onclick=()=>{if(cart.length>0){$('#cartSidebar').classList.remove('open');$('#checkoutOverlay').classList.add('active');}};
+$('#checkoutBtn').onclick=()=>{if(cart.length>0){$('#cartSidebar').classList.remove('open');$('#checkoutOverlay').classList.add('active');}}; 
 $('#closeCheckoutBtn').onclick=()=>$('#checkoutOverlay').classList.remove('active');
 $('#checkoutForm').onsubmit=async e=>{e.preventDefault();const n=$('#name').value.trim(),em=$('#email').value.trim(),d=$('#pickupDate').value,sd=new Date(d),t=new Date();t.setHours(0,0,0,0);const min=new Date();min.setDate(t.getDate()+7);if(sd<min||sd.getFullYear()>2100){showMsg('De ophaaldatum moet minstens 1 week van tevoren zijn en een geldig jaar bevatten.');return;}const total=cart.reduce((s,i)=>s+i.price*i.quantity,0),items=JSON.stringify(cart.map(i=>({name:i.name,quantity:i.quantity,price:i.price}))),ID=Date.now().toString(36)+Math.random().toString(36).substr(2,9);try{const res=await fetch(ORD_URL,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({data:{ID,Naam:n,Email:em,Ophaaldatum:d,Items:items,Totaalprijs:total.toFixed(2)}})});if(res.ok){showMsg('Bedankt voor je bestelling! We hebben je bestelling succesvol ontvangen.');cart=[];renderCart();$('#checkoutOverlay').classList.remove('active');$('#name').value='';$('#email').value='';$('#pickupDate').value='';}else{showMsg('Er is een fout opgetreden. Probeer het later opnieuw.');}}catch(err){console.error(err);showMsg('Er is een fout opgetreden. Probeer het later opnieuw.');}};
 renderCart();loadProducts();
